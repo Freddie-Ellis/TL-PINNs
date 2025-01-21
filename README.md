@@ -1,2 +1,2 @@
 # TL-PINNs
-Third year individual project on transfer learning integrated PINNs for fluid mechanics
+Third year individual project on Transfer Learning (TL) integrated PINNs for fluid mechanics.
