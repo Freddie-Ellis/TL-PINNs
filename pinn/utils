@@ -1,0 +1,21 @@
+# pinn/utils.py
+import numpy as np
+import matplotlib.pyplot as plt
+
+def save_model(model, path):
+    save_dict = {}
+    for i, w in enumerate(model.weights):
+        save_dict[f"weight_{i}"] = w.numpy()
+    for i, b in enumerate(model.biases):
+        save_dict[f"bias_{i}"] = b.numpy()
+    np.savez(path, **save_dict)
+    print(f"Model saved to {path}")
+
+def plot_loss_history(loss_history, save_path="plots/loss_plot.png"):
+    plt.plot(loss_history)
+    plt.yscale("log")
+    plt.xlabel("Iterations")
+    plt.ylabel("Loss")
+    plt.title("Training Loss History")
+    plt.savefig(save_path)
+    print(f"Loss history saved to {save_path}")
