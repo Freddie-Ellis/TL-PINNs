@@ -29,11 +29,6 @@ print('Training Model...')
 model = PhysicsInformedNN(x_train, y_train, t_train, u_train, v_train, layers)
 model.train(nIter)
 
-# Create directory for plots if it doesn't exist
-plot_dir = 'plots'
-if not os.path.exists(plot_dir):
-    os.makedirs(plot_dir)
-
 # Plot and save the loss history
 model.plot_loss_history(save_path=f'{plot_dir}/specmodel_{run_ID}_loss_history.png')
 print(f'Model Training Complete for {nIter} iterations')
