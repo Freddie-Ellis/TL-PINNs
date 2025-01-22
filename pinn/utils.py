@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
+import tensorflow as tf
 
 def save_model(model, path):
     save_dict = {}
@@ -52,3 +53,21 @@ def plot_solution(X_star, u_star, index, title):
     plt.title(title)
     plt.colorbar()
 
+def load_model(self, path, load_weights=True, load_params=True):
+        data = np.load(path, allow_pickle=True)
+            
+        if load_weights:
+            for i in range(len(self.weights)):
+                weight_key = f'weight_{i}'
+                bias_key = f'bias_{i}'
+                    
+                if weight_key in data and bias_key in data:
+                    self.weights[i].assign(tf.convert_to_tensor(data[weight_key]))
+                    self.biases[i].assign(tf.convert_to_tensor(data[bias_key]))
+            
+        if load_params:
+            if 'lambda_1' in data and 'lambda_2' in data:
+                self.lambda_1.assign(tf.convert_to_tensor(data['lambda_1']))
+                self.lambda_2.assign(tf.convert_to_tensor(data['lambda_2']))
+    
+        print(f"Model loaded from {path}")

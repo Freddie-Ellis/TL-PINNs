@@ -1,10 +1,18 @@
+from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
+import numpy as np
+import scipy.io
+from scipy.interpolate import griddata
+from tqdm import tqdm
+
 def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
                           x_start=1, x_end=8, y_start=-2, y_end=2,
                           num_points_x=35, num_points_y=15, cylinder_radius=0.5):
 
     # File paths based on the given Reynolds number
-    data_path = f'data/Cyl{Re}/'
-    
+    data_path = fr'C:\Users\fredd\Desktop\Individual Project\Code\data/Cyl{Re}/'
+    print(f"Data processing began for Reynolds number: {Re}")
+
     # Load the data for the given Reynolds number
     vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
     t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
@@ -46,8 +54,8 @@ def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
     UU_spec_filtered = np.zeros((coord_grid_spec_filtered.shape[0], num_time_points))
     VV_spec_filtered = np.zeros((coord_grid_spec_filtered.shape[0], num_time_points))
 
-    # Perform interpolation for each selected time point
-    for i, t_idx in enumerate(selected_time_indices):
+    # Perform interpolation for each selected time point with progress bar
+    for i, t_idx in tqdm(enumerate(selected_time_indices), total=num_time_points, desc="Processing time steps"):
         UU_spec_filtered[:, i] = griddata(coord_data, vel_data[:, 0, t_idx], coord_grid_spec_filtered, method='cubic')
         VV_spec_filtered[:, i] = griddata(coord_data, vel_data[:, 1, t_idx], coord_grid_spec_filtered, method='cubic')
 
@@ -141,10 +149,3 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     anim.save(save_path, writer='pillow', fps=5)
     print(f"Animation saved as {save_path}")
 
-# Example usage with processed Reynolds number 100 data
-data_Re100 = process_reynolds_data(100)
-visualize_velocity_contours(data_Re100, save_path='plots/velocity_magnitude_Re100.gif')
-
-# Example usage with processed Reynolds number 150 data
-data_Re150 = process_reynolds_data(150)
-visualize_velocity_contours(data_Re150, save_path='plots/velocity_magnitude_Re150.gif')
