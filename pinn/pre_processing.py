@@ -1,3 +1,5 @@
+# pinn/pre_processing.py
+
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
@@ -10,7 +12,7 @@ def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
                           num_points_x=35, num_points_y=15, cylinder_radius=0.5):
 
     # File paths based on the given Reynolds number
-    data_path = fr'C:\Users\fredd\Desktop\Individual Project\Code\data/Cyl{Re}/'
+    data_path = f'C:../data/Cyl{Re}/'
     print(f"Data processing began for Reynolds number: {Re}")
 
     # Load the data for the given Reynolds number
