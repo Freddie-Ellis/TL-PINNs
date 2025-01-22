@@ -9,3 +9,19 @@ Make change in VS -> Push to GitHub -> pull on Moba using 'git pull origin main'
 Make change in Moba -> Push to GitHub ('make the change' -> git status -> git add . -> git commit -m "update message" -> 
 git push origin main) -> Pull on local machine in GitHub Desktop
 
+#Requirements
+
+TensorFlow == 2.5.0
+NumPy == 1.19.2
+Cuda == 11.2
+Cudnn == 8.1
+
+#Naming Convention
+
+a_b_c_d_e
+
+a - TL or Mod (Transfer Learning or Model)
+b - @ + 'No It' (No Iterations (e+3) for standard training)
+c - TL + 'No It' (No Iterations (e+3) for Transfer Learning)
+d - '123' (Frozen Layers Numbers)
+e - 'Re1 - Re2' (Reynolds Number Change)
