@@ -6,25 +6,42 @@ import numpy as np
 import scipy.io
 from scipy.interpolate import griddata
 from tqdm import tqdm
+import os
 
 def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
                           x_start=1, x_end=8, y_start=-2, y_end=2,
-                          num_points_x=35, num_points_y=15, cylinder_radius=0.5):
+                          num_points_x=35, num_points_y=15, cylinder_radius=0.5,
+                          save_path='temp/'):
 
-    # File paths based on the given Reynolds number
-    data_path = f'C:../data/Cyl{Re}/'
+    # Ensure the save directory exists
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    # Define the cache file path with correct naming convention
+    save_file = os.path.join(save_path, f'data_re{Re}_{num_points_x}x{num_points_y}x{num_time_points}.npz')
+
+    # Check if processed data already exists
+    if os.path.exists(save_file):
+        print(f"Loading cached data from {save_file}")
+        return load_data(save_file)
+
     print(f"Data processing began for Reynolds number: {Re}")
 
-    # Load the data for the given Reynolds number
-    vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
-    t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
-    coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
-    P_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
+    # File paths based on the given Reynolds number
+    data_path = f'../data/Cyl{Re}/'
+
+    try:
+        vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
+        t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
+        coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
+        P_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"Error loading data files. Ensure they exist in {data_path}") from e
 
     # Get shape parameters
     N = coord_data.shape[0]
     T = t_data.shape[0]
-    
+
     # Tile time data across spatial points
     TT = np.tile(t_data, (1, N)).T
     PP = P_data  # N x T
@@ -81,8 +98,9 @@ def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
     v_train_spec = VV_spec_filtered.T.reshape(-1, 1)
 
     print(f"Data processing completed for Reynolds number: {Re}")
-    
-    return {
+
+    # Data dictionary
+    processed_data = {
         'x_train': x_train_spec,
         'y_train': y_train_spec,
         't_train': t_train_spec,
@@ -91,9 +109,30 @@ def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
         'UU_data': UU_data,
         'VV_data': VV_data,
         'coord_grid': coord_grid_spec_filtered,
-        'time_indices': selected_time_indices
+        'time_indices': selected_time_indices,
+        'coord_data': coord_data,
+        'vel_data': vel_data,
+        'P_data': P_data,
+        'TT': TT
     }
 
+    # Save processed data for future use
+    save_data(processed_data, save_file)
+
+    return processed_data
+
+
+def save_data(data, filename):
+    """Saves processed data to an .npz file with structured arrays."""
+    np.savez_compressed(filename, **data)
+    print(f"Processed data saved to {filename}")
+
+
+def load_data(filename):
+    """Loads processed data from an .npz file."""
+    data = np.load(filename, allow_pickle=True)
+    print(f"Data loaded from {filename}")
+    return {key: data[key] for key in data.files}
 
 def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnitude_animation.gif'):
     """
