@@ -9,33 +9,19 @@ Make change in VS -> Push to GitHub -> pull on Moba using 'git pull origin main'
 Make change in Moba -> Push to GitHub ('make the change' -> git status -> git add . -> git commit -m "update message" -> 
 git push origin main) -> Pull on local machine in GitHub Desktop
 
-Example test slurm file:
+# Requirements
 
-#!/bin/bash
+TensorFlow == 2.5.0  
+NumPy == 1.19.2  
+Cuda == 11.2  
+Cudnn == 8.1
 
-#SBATCH --job-name=test   # Job name
-#SBATCH --output=/mainfs/lyceum/fe1g22/TL-PINNs/out/test.out        # Standard output and error log
-#SBATCH --time=36:00:00                      # Time limit hrs:min:sec
-#SBATCH --partition=lyceum                   # Partition name (adjust as needed)
-#SBATCH --nodes=1                            # Number of nodes
-#SBATCH --gres=gpu:1                         # Request 1 GPU
-#SBATCH --cpus-per-gpu=8                     # CPU cores per GPU
-#SBATCH --mem=32G                            # Memory per node
-#SBATCH --mail-type=ALL                      # Mail notifications (BEGIN, END, FAIL, ALL)
-#SBATCH --mail-user=fe1g22@soton.ac.uk       # Where to send mail notifications
+# Naming Convention
 
-# Unload all modules to avoid conflicts
-module purge
+a_b_c_d_e
 
-# Load Anaconda 
-module load anaconda
-
-# Initialize Conda environment for TensorFlow 2.5.9
-source ~/.bashrc
-conda activate TENSOR_env  # Activate your environment with TensorFlow 2.5.9
-
-# Optional: Debugging check to confirm GPU visibility and driver compatibility
-nvidia-smi
-
-# Run the Python script
-python3 -u /mainfs/lyceum/fe1g22/TL-PINNs/PINN_train.py
+a - TL or Mod (Transfer Learning or Model)  
+b - @ + 'No It' (No Iterations (e+3) for standard training)  
+c - TL + 'No It' (No Iterations (e+3) for Transfer Learning)  
+d - '123' (Frozen Layers Numbers)  
+e - 'Re1 - Re2' (Reynolds Number Change)  
