@@ -4,19 +4,18 @@ import os
 import numpy as np
 import scipy.io
 from scipy.interpolate import griddata
-from pinn.config import Re, run_ID, LAYERS
+from pinn.config import run_ID, nIter
 from training import model
 import matplotlib.pyplot as plt
 import matplotlib
 
 matplotlib.use('Agg')
 
-save_dir = f'plots/{run_ID}/'
-os.makedirs(save_dir, exist_ok=True)
-
-def evaluate_model(Re, snap, model_path, x_start=1, x_end=8, y_start=-2, y_end=2):
+def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-2, y_end=2):
     model.load_model(model_path)
 
+    os.makedirs(save_dir, exist_ok=True)
+    
     data_path = f'../data/Cyl{Re}/'
     vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
     t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
@@ -54,7 +53,7 @@ def evaluate_model(Re, snap, model_path, x_start=1, x_end=8, y_start=-2, y_end=2
     coord_grid_pred = np.hstack((x_test_filtered, y_test_filtered))
     t_pred = np.full((coord_grid_pred.shape[0], 1), snap)
 
-    u_pred, v_pred, p_pred = model.predict(x_test_filtered, y_test_filtered, t_pred)
+    u_pred, v_pred, p_pred, f_u_pred, f_v_pred = model.predict(x_test_filtered, y_test_filtered, t_pred)
 
     u_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
                     u_test_filtered.flatten(), (X_grid, Y_grid), method='cubic')
@@ -159,5 +158,22 @@ def evaluate_model(Re, snap, model_path, x_start=1, x_end=8, y_start=-2, y_end=2
     plt.title("Predicted v Field")
     plt.savefig(f'{save_dir}predicted_v_field.png', dpi=300)
     plt.show()
+
+    # Evaluate the residuals
+    residual_u = np.mean(np.abs(f_u_pred))
+    residual_v = np.mean(np.abs(f_v_pred))
+
+    print(f"Mean Residual of u-equation: {residual_u:.6e}")
+    print(f"Mean Residual of v-equation: {residual_v:.6e}")
+
+    '''for i in range(0, T, 10):  # Plot every 10th time step
+    t_pred = np.full((coord_grid_pred.shape[0], 1), i)
+    u_pred_t, v_pred_t, _ = model.predict(x_test_filtered, y_test_filtered, t_pred)
+    
+    plt.contourf(X_grid, Y_grid, griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                                         u_pred_t.flatten(), (X_grid, Y_grid), method='cubic'), cmap="viridis")
+    plt.title(f"Predicted u Field at t={i}")
+    plt.colorbar()
+    plt.show()'''
 
     '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
