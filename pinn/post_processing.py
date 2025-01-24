@@ -23,12 +23,7 @@ def evaluate_model(Re, snap, model_path, x_start=1, x_end=8, y_start=-2, y_end=2
     coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
     P_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
 
-    # Get shape parameters
-    N = coord_data.shape[0]
-    T = t_data.shape[0]
-
     '''Fit true DNS data to the training domain'''
-    snap = 0
     x_test = coord_data[:, 0:1]
     y_test = coord_data[:, 1:2]
     u_test = vel_data[:, 0, snap]

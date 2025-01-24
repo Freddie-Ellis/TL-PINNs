@@ -14,17 +14,21 @@ git push origin main) -> Pull on local machine in GitHub Desktop
 TensorFlow == 2.5.0  
 NumPy == 1.19.2  
 Cuda == 11.2  
-Cudnn == 8.1
+Cudnn == 8.1  
+matplotlib == 3.2.2
 
 # Naming Convention
+{run_ID}_nIter
 
-A_B_C_D_E
+n_Iter is number of iterations
 
-A - TL or Mod (Transfer Learning or Model)  
-B - @ + 'No It' (No Iterations (e+3) for standard training)  
-C - TL + 'No It' (No Iterations (e+3) for Transfer Learning)  
-D - '123' (Frozen Layers Numbers)  
-E - 'Re1 - Re2' (Reynolds Number Change)  
+run_ID ->
+A_B_C_D:
+A is the Re of the finished model,
+B is PINN for a PINN model and TL for a transfer learned model
+C is the frozen layers if applicable
+D is something else
+
 
 # Process
 

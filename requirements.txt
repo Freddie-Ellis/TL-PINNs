@@ -1,5 +1,0 @@
-TensorFlow == 2.5.0
-NumPy == 1.19.2
-Cuda == 11.2
-Cudnn == 8.1
-matplotlib == 3.2.2

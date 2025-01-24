@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 import tensorflow as tf
 from pinn.config import run_ID, LEARNING_RATE
+from pinn.utils import save_model
 
 class PhysicsInformedNN:
     def __init__(self, x, y, t, u, v, layers, pretrain_path=None, layers_to_freeze=None):
@@ -141,14 +142,14 @@ class PhysicsInformedNN:
             self.loss_history.append(loss_value.numpy())
                 
             # Print the progress
-            if it % 10 == 0:
+            if it % 100 == 0:
                 elapsed = time.time() - start_time
                 lambda_1_value = self.lambda_1.numpy()
                 lambda_2_value = self.lambda_2.numpy()
                 print(f'It: {it}, Loss: {loss_value:.3e}, l1: {lambda_1_value:.3f}, l2: {lambda_2_value:.5f}, Time: {elapsed:.2f}')
                 start_time = time.time()
-                if it % 5000 == 0 and it > 0:
-                    self.save_model(f'models/checkpoints/{run_ID}_checkpoint_{it}.npz')
+                if it % 1000 == 0 and it > 0:
+                    save_model(self, f'models/{run_ID}/{run_ID}_{it}.npz')
                     
     def plot_loss_history(self, save_path=f'plots/savehistory_{run_ID}'):
         plt.figure(figsize=(10, 6))
