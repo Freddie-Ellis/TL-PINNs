@@ -19,9 +19,16 @@ else:
 for model_file in model_files:
     model_path = os.path.join(model_dir, model_file)
     print(f"Processing model: {model_path}")
-    
-    results = evaluate_model(Re, 0, f'models/{run_ID}/{model_file}', f'plots/{run_ID}/{model_file}')
+        
+    model_file_no_ext, _ = os.path.splitext(model_file)
 
+    # Pass the modified filename for saving plots
+    results = evaluate_model(
+        Re, 
+        0, 
+        f'models/{run_ID}/{model_file}', 
+        f'plots/{run_ID}/{model_file_no_ext}/'
+    )
     # Save results or analyze predictions
     print(f"Model {model_file} processed successfully.")
 
