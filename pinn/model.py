@@ -4,11 +4,11 @@ import time
 from matplotlib import pyplot as plt
 import numpy as np
 import tensorflow as tf
-from pinn.config import run_ID
+from pinn.config import run_ID, LEARNING_RATE
 
 class PhysicsInformedNN:
     def __init__(self, x, y, t, u, v, layers, pretrain_path=None, layers_to_freeze=None):
-        X = np.concatenate([x, y, t], 1)
+        X = np.concatenate([np.atleast_2d(x), np.atleast_2d(y), np.atleast_2d(t)], axis=1)
         self.lb = X.min(0)
         self.ub = X.max(0)
 
@@ -23,7 +23,7 @@ class PhysicsInformedNN:
         self.weights, self.biases = self.initialize_NN(layers)
         self.lambda_1 = tf.Variable(0.0, dtype=tf.float32, name="lambda_1")
         self.lambda_2 = tf.Variable(0.0, dtype=tf.float32, name="lambda_2")
-        self.optimizer = tf.keras.optimizers.Adam()
+        self.optimizer = tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE)
         self.loss_history = []
 
         # Load weights if provided
@@ -169,3 +169,22 @@ class PhysicsInformedNN:
         
         u_pred, v_pred, p_pred, _, _ = self.net_NS(x_star, y_star, t_star)
         return u_pred.numpy(), v_pred.numpy(), p_pred.numpy()
+
+    def load_model(self, path, load_weights=True, load_params=True):
+            data = np.load(path, allow_pickle=True)
+                
+            if load_weights:
+                for i in range(len(self.weights)):
+                    weight_key = f'weight_{i}'
+                    bias_key = f'bias_{i}'
+                        
+                    if weight_key in data and bias_key in data:
+                        self.weights[i].assign(tf.convert_to_tensor(data[weight_key]))
+                        self.biases[i].assign(tf.convert_to_tensor(data[bias_key]))
+                
+            if load_params:
+                if 'lambda_1' in data and 'lambda_2' in data:
+                    self.lambda_1.assign(tf.convert_to_tensor(data['lambda_1']))
+                    self.lambda_2.assign(tf.convert_to_tensor(data['lambda_2']))
+        
+            print(f"Model loaded from {path}")

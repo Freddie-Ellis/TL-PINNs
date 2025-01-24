@@ -18,10 +18,18 @@ Cudnn == 8.1
 
 # Naming Convention
 
-a_b_c_d_e
+A_B_C_D_E
 
-a - TL or Mod (Transfer Learning or Model)  
-b - @ + 'No It' (No Iterations (e+3) for standard training)  
-c - TL + 'No It' (No Iterations (e+3) for Transfer Learning)  
-d - '123' (Frozen Layers Numbers)  
-e - 'Re1 - Re2' (Reynolds Number Change)  
+A - TL or Mod (Transfer Learning or Model)  
+B - @ + 'No It' (No Iterations (e+3) for standard training)  
+C - TL + 'No It' (No Iterations (e+3) for Transfer Learning)  
+D - '123' (Frozen Layers Numbers)  
+E - 'Re1 - Re2' (Reynolds Number Change)  
+
+# Process
+
+For training and verifying PINN model:
+Clean and process source data for training case A -> Train model A on said data -> Clean and process test data -> Make and plot flow predictions -> Compare predictions to true values and compute errors
+
+For TL:
+Change hyper paramters of model A -> process target data -> re-train model on target data -> Make and plot flow predictions -> Compare predictions to true values and compute errors 
