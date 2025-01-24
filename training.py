@@ -5,10 +5,16 @@ import numpy as np
 from pinn.config import run_ID, nIter, LAYERS, Re
 from pinn.pre_processing import process_reynolds_data, visualize_velocity_contours
 
+save_dir = f'models/{run_ID}/'
+os.makedirs(save_dir, exist_ok=True)
+
+plots_dir = f'plots/{run_ID}/'
+os.makedirs(plots_dir, exist_ok=True)
 
 # Load or process data
 data = process_reynolds_data(Re)
 visualize_velocity_contours(data, save_path=f'plots/{run_ID}/{run_ID}_training_data.gif')
+
 # Extract processed training data
 x_train = data['x_train']
 y_train = data['y_train']
@@ -32,8 +38,7 @@ def train_model():
     print(f'Model Training Complete for {nIter} iterations')
 
     # Save the trained model weights
-    save_model(model, f'models/{run_ID}_weights.npz')
-    print(f"Model weights saved to 'models/{run_ID}_weights.npz'")
+    save_model(model, f'models/{run_ID}/{run_ID}_{nIter}.npz')
 
 # Run training only if executed directly
 if __name__ == "__main__":
