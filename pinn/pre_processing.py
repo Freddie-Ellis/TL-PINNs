@@ -30,13 +30,12 @@ def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
     # File paths based on the given Reynolds number
     data_path = f'../data/Cyl{Re}/'
 
-    try:
-        vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
-        t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
-        coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
-        P_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
-    except FileNotFoundError as e:
-        raise FileNotFoundError(f"Error loading data files. Ensure they exist in {data_path}") from e
+
+    vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
+    t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
+    coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
+    P_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
+
 
     # Get shape parameters
     N = coord_data.shape[0]
@@ -91,21 +90,21 @@ def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
     VV_data = VV_data.reshape((num_points_y, num_points_x, num_time_points))
 
     # Prepare training data
-    x_train_spec = np.tile(X_spec.flatten()[valid_points_mask, None], (num_time_points, 1))
-    y_train_spec = np.tile(Y_spec.flatten()[valid_points_mask, None], (num_time_points, 1))
-    t_train_spec = np.repeat(t_data_spec.flatten(), np.sum(valid_points_mask))[:, None]
-    u_train_spec = UU_spec_filtered.T.reshape(-1, 1)
-    v_train_spec = VV_spec_filtered.T.reshape(-1, 1)
+    x_train = np.tile(X_spec.flatten()[valid_points_mask, None], (num_time_points, 1))
+    y_train = np.tile(Y_spec.flatten()[valid_points_mask, None], (num_time_points, 1))
+    t_train = np.repeat(t_data_spec.flatten(), np.sum(valid_points_mask))[:, None]
+    u_train = UU_spec_filtered.T.reshape(-1, 1)
+    v_train = VV_spec_filtered.T.reshape(-1, 1)
 
     print(f"Data processing completed for Reynolds number: {Re}")
 
     # Data dictionary
     processed_data = {
-        'x_train': x_train_spec,
-        'y_train': y_train_spec,
-        't_train': t_train_spec,
-        'u_train': u_train_spec,
-        'v_train': v_train_spec,
+        'x_train': x_train,
+        'y_train': y_train,
+        't_train': t_train,
+        'u_train': u_train,
+        'v_train': v_train,
         'UU_data': UU_data,
         'VV_data': VV_data,
         'coord_grid': coord_grid_spec_filtered,

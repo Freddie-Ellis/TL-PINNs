@@ -25,7 +25,7 @@ def train_model():
     model.train(nIter)
 
     # Plot and save the loss history
-    model.plot_loss_history(save_path=f'plots/{run_ID}_loss_history.png')
+    model.plot_loss_history(save_path=f'plots/loss_hist/{run_ID}_loss_hist.png')
     print(f'Model Training Complete for {nIter} iterations')
 
     # Save the trained model weights

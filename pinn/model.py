@@ -8,7 +8,7 @@ from pinn.config import run_ID, LEARNING_RATE
 
 class PhysicsInformedNN:
     def __init__(self, x, y, t, u, v, layers, pretrain_path=None, layers_to_freeze=None):
-        X = np.concatenate([x, y, t], 1)
+        X = np.concatenate([np.atleast_2d(x), np.atleast_2d(y), np.atleast_2d(t)], axis=1)
         self.lb = X.min(0)
         self.ub = X.max(0)
 
