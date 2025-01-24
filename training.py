@@ -3,12 +3,12 @@ from pinn.model import PhysicsInformedNN
 from pinn.utils import save_model, plot_loss_history
 import numpy as np
 from pinn.config import run_ID, nIter, LAYERS, Re
-from pinn.pre_processing import process_reynolds_data
+from pinn.pre_processing import process_reynolds_data, visualize_velocity_contours
 
 
 # Load or process data
 data = process_reynolds_data(Re)
-
+visualize_velocity_contours(data, save_path=f'plots/{run_ID}/{run_ID}_training_data.gif')
 # Extract processed training data
 x_train = data['x_train']
 y_train = data['y_train']
