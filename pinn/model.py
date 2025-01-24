@@ -168,8 +168,8 @@ class PhysicsInformedNN:
         y_star = tf.convert_to_tensor(y_star, dtype=tf.float32)
         t_star = tf.convert_to_tensor(t_star, dtype=tf.float32)
         
-        u_pred, v_pred, p_pred, _, _ = self.net_NS(x_star, y_star, t_star)
-        return u_pred.numpy(), v_pred.numpy(), p_pred.numpy()
+        u_pred, v_pred, p_pred, f_u_pred, f_v_pred= self.net_NS(x_star, y_star, t_star)
+        return u_pred.numpy(), v_pred.numpy(), p_pred.numpy(), f_u_pred.numpy(), f_v_pred.numpy()
 
     def load_model(self, path, load_weights=True, load_params=True):
             data = np.load(path, allow_pickle=True)
