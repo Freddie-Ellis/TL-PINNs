@@ -7,7 +7,7 @@ from pinn.pre_processing import process_reynolds_data
 
 
 # Load or process data
-data = process_reynolds_data(100)
+data = process_reynolds_data(Re)
 
 # Extract processed training data
 x_train = data['x_train']
@@ -24,8 +24,11 @@ def train_model():
     print('Training Model...')
     model.train(nIter)
 
+    save_dir = f'plots/{run_ID}/'
+    os.makedirs(save_dir, exist_ok=True)
+
     # Plot and save the loss history
-    model.plot_loss_history(save_path=f'plots/loss_hist/{run_ID}_loss_hist.png')
+    model.plot_loss_history(save_path=f'plots/{run_ID}/{run_ID}_loss_hist.png')
     print(f'Model Training Complete for {nIter} iterations')
 
     # Save the trained model weights

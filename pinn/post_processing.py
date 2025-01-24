@@ -14,18 +14,19 @@ matplotlib.use('Agg')
 save_dir = f'plots/{run_ID}/'
 os.makedirs(save_dir, exist_ok=True)
 
-data_path = f'../data/Cyl{Re}/'
-vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
-t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
-coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
-P_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
-
-# Get shape parameters
-N = coord_data.shape[0]
-T = t_data.shape[0]
-
-def evaluate_model(snap, model_path, x_start=1, x_end=8, y_start=-2, y_end=2):
+def evaluate_model(Re, snap, model_path, x_start=1, x_end=8, y_start=-2, y_end=2):
     model.load_model(model_path)
+
+    data_path = f'../data/Cyl{Re}/'
+    vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
+    t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
+    coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
+    P_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
+
+    # Get shape parameters
+    N = coord_data.shape[0]
+    T = t_data.shape[0]
+
     '''Fit true DNS data to the training domain'''
     snap = 0
     x_test = coord_data[:, 0:1]
@@ -163,3 +164,5 @@ def evaluate_model(snap, model_path, x_start=1, x_end=8, y_start=-2, y_end=2):
     plt.title("Predicted v Field")
     plt.savefig(f'{save_dir}predicted_v_field.png', dpi=300)
     plt.show()
+
+    '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
