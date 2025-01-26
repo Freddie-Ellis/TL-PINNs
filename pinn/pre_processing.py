@@ -186,6 +186,6 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     anim = FuncAnimation(fig, update, frames=num_time_points, interval=100)
 
     # Save animation as a GIF (ensure Pillow is installed)
-    anim.save(save_path, writer='pillow', fps=5)
+    anim.save(save_path, writer='pillow', fps=1)
     print(f"Animation saved as {save_path}")
 

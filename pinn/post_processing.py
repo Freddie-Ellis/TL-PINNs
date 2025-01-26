@@ -8,6 +8,8 @@ from pinn.config import run_ID, nIter
 from training import model
 import matplotlib.pyplot as plt
 import matplotlib
+from pinn.FFT import FFT
+from matplotlib.animation import FuncAnimation
 
 matplotlib.use('Agg')
 
@@ -96,7 +98,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Relative Error in u Field")
     plt.savefig(f'{save_dir}relative_error_u.png', dpi=300)
-    plt.show()
 
     # Plot true u field
     plt.figure(figsize=(10, 6))
@@ -106,7 +107,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("True u Field")
     plt.savefig(f'{save_dir}true_u_field.png', dpi=300)
-    plt.show()
 
     # Plot predicted u field
     plt.figure(figsize=(10, 6))
@@ -119,7 +119,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Predicted u Field")
     plt.savefig(f'{save_dir}predicted_u_field.png', dpi=300)
-    plt.show()
 
     # --- V component plots ---
 
@@ -134,7 +133,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Relative Error in v Field")
     plt.savefig(f'{save_dir}relative_error_v.png', dpi=300)
-    plt.show()
 
     # Plot true v field
     plt.figure(figsize=(10, 6))
@@ -144,7 +142,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("True v Field")
     plt.savefig(f'{save_dir}true_v_field.png', dpi=300)
-    plt.show()
 
     # Plot predicted v field
     plt.figure(figsize=(10, 6))
@@ -157,7 +154,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Predicted v Field")
     plt.savefig(f'{save_dir}predicted_v_field.png', dpi=300)
-    plt.show()
 
     # Evaluate the residuals
     residual_u = np.mean(np.abs(f_u_pred))
@@ -166,14 +162,69 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     print(f"Mean Residual of u-equation: {residual_u:.6e}")
     print(f"Mean Residual of v-equation: {residual_v:.6e}")
 
-    '''for i in range(0, T, 10):  # Plot every 10th time step
-    t_pred = np.full((coord_grid_pred.shape[0], 1), i)
-    u_pred_t, v_pred_t, _ = model.predict(x_test_filtered, y_test_filtered, t_pred)
-    
-    plt.contourf(X_grid, Y_grid, griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
-                                         u_pred_t.flatten(), (X_grid, Y_grid), method='cubic'), cmap="viridis")
-    plt.title(f"Predicted u Field at t={i}")
-    plt.colorbar()
-    plt.show()'''
+    def animate_u_predictions(model, x_test_filtered, y_test_filtered, X_grid, Y_grid, t_values, save_dir):
 
+        # Define contour levels for consistent visualization
+        levels = 50
+
+        # Setup figure
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Initial prediction for the first time step
+        t_input = np.full_like(x_test_filtered, t_values[0])
+        u_pred, _, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+        
+        # Interpolate u_pred to grid
+        u_pred_grid = griddata(
+            (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+            u_pred.flatten(), 
+            (X_grid, Y_grid), 
+            method='cubic'
+        )
+
+        # Initial contour plot
+        contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="viridis")
+        colorbar = plt.colorbar(contour, ax=ax)
+        colorbar.set_label("Predicted Velocity u")
+
+        # Title, labels, and formatting
+        ax.set_title(f"Predicted u Field at Time t = {t_values[0]:.2f}")
+        ax.set_xlabel("X Coordinate")
+        ax.set_ylabel("Y Coordinate")
+        ax.axis('equal')
+
+        # Update function for animation
+        def update(frame):
+            ax.clear()
+            t_input = np.full_like(x_test_filtered, t_values[frame])
+
+            # Predict u_pred for the current time step
+            u_pred, _, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+
+            # Interpolate u_pred values to the structured grid
+            u_pred_grid = griddata(
+                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                u_pred.flatten(), 
+                (X_grid, Y_grid), 
+                method='cubic'
+            )
+
+            # Update contour plot
+            contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="viridis")
+            ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
+            ax.set_xlabel("X Coordinate")
+            ax.set_ylabel("Y Coordinate")
+            ax.axis('equal')
+
+            return contour
+
+        # Create the animation
+        anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
+
+        # Save the animation as a GIF
+        anim.save(f'{save_dir}/animation.gif', writer='pillow', fps=5)
+        plt.close(fig)
+        print(f"Animation saved")
+
+    animate_u_predictions(model, x_test_filtered, y_test_filtered, X_grid, Y_grid, np.linspace(0, 20, 100), save_dir)
     '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
