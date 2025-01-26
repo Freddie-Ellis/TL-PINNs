@@ -8,6 +8,8 @@ from pinn.config import run_ID, nIter
 from training import model
 import matplotlib.pyplot as plt
 import matplotlib
+from pinn.FFT import FFT
+from matplotlib.animation import FuncAnimation
 
 matplotlib.use('Agg')
 
@@ -166,14 +168,63 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     print(f"Mean Residual of u-equation: {residual_u:.6e}")
     print(f"Mean Residual of v-equation: {residual_v:.6e}")
 
-    '''for i in range(0, T, 10):  # Plot every 10th time step
-    t_pred = np.full((coord_grid_pred.shape[0], 1), i)
-    u_pred_t, v_pred_t, _ = model.predict(x_test_filtered, y_test_filtered, t_pred)
-    
-    plt.contourf(X_grid, Y_grid, griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
-                                         u_pred_t.flatten(), (X_grid, Y_grid), method='cubic'), cmap="viridis")
-    plt.title(f"Predicted u Field at t={i}")
-    plt.colorbar()
-    plt.show()'''
 
+    # Generate animation of predicted u-velocity field
+    def visualize_predicted_u_velocity(x_test_filtered, y_test_filtered, u_pred, X_grid, Y_grid, save_path):
+
+        fig, ax = plt.subplots(figsize=(8, 6))
+
+        # Interpolate data onto the grid for initial frame
+        u_grid = griddata(
+            (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+            u_pred[:, 0].flatten(), 
+            (X_grid, Y_grid), 
+            method='cubic'
+        )
+
+        # Initial contour plot
+        contour = ax.contourf(X_grid, Y_grid, u_grid, levels=50, cmap='coolwarm')
+        colorbar = plt.colorbar(contour, ax=ax)
+        colorbar.set_label("Predicted u-velocity")
+
+        ax.set_title("Predicted u-velocity at Time Step 0")
+        ax.set_xlabel("X Coordinate")
+        ax.set_ylabel("Y Coordinate")
+        ax.axis('equal')
+        ax.grid(True)
+
+        # Update function for animation
+        def update(frame):
+            ax.clear()
+            u_grid = griddata(
+                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                u_pred[:, frame].flatten(), 
+                (X_grid, Y_grid), 
+                method='cubic'
+            )
+            contour = ax.contourf(X_grid, Y_grid, u_grid, levels=50, cmap='coolwarm')
+            ax.set_title(f"Predicted u-velocity at Time Step {frame}")
+            ax.set_xlabel("X Coordinate")
+            ax.set_ylabel("Y Coordinate")
+            ax.axis('equal')
+            ax.grid(True)
+            return contour
+
+        # Create animation
+        anim = FuncAnimation(fig, update, frames=u_pred.shape[1], interval=200)
+
+        # Save animation
+        anim.save(save_path, writer='pillow', fps=5)
+        plt.close(fig)
+        print(f"Animation saved as {save_path}")
+
+    # Call the visualization function and save the animation
+    visualize_predicted_u_velocity(
+        x_test_filtered, 
+        y_test_filtered, 
+        u_pred, 
+        X_grid, 
+        Y_grid, 
+        save_path=os.path.join(save_dir, 'predicted_u_velocity_animation.gif')
+    )
     '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
