@@ -189,3 +189,10 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     anim.save(save_path, writer='pillow', fps=1)
     print(f"Animation saved as {save_path}")
 
+'''# Create animation with 1 frame every 2 seconds
+anim = FuncAnimation(fig, update, frames=num_time_points, interval=2000)
+
+# Save animation (no need for fps, interval controls timing)
+anim.save(save_path, writer='pillow')
+print(f"Animation saved as {save_path}")
+!SLOWER ANIMATION FOR TRUE TIME VISULISATION!'''
