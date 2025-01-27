@@ -98,7 +98,8 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Relative Error in u Field")
     plt.savefig(f'{save_dir}relative_error_u.png', dpi=300)
-
+    plt.close()
+    
     # Plot true u field
     plt.figure(figsize=(10, 6))
     plt.contourf(X_grid, Y_grid, u_grid, levels=levels, cmap="viridis")
@@ -107,6 +108,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("True u Field")
     plt.savefig(f'{save_dir}true_u_field.png', dpi=300)
+    plt.close()
 
     # Plot predicted u field
     plt.figure(figsize=(10, 6))
@@ -119,6 +121,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Predicted u Field")
     plt.savefig(f'{save_dir}predicted_u_field.png', dpi=300)
+    plt.close()
 
     # --- V component plots ---
 
@@ -133,7 +136,8 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Relative Error in v Field")
     plt.savefig(f'{save_dir}relative_error_v.png', dpi=300)
-
+    plt.close()
+    
     # Plot true v field
     plt.figure(figsize=(10, 6))
     plt.contourf(X_grid, Y_grid, v_grid, levels=levels, cmap="viridis")
@@ -142,6 +146,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("True v Field")
     plt.savefig(f'{save_dir}true_v_field.png', dpi=300)
+    plt.close()
 
     # Plot predicted v field
     plt.figure(figsize=(10, 6))
@@ -154,6 +159,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plt.ylabel("Y Coordinate")
     plt.title("Predicted v Field")
     plt.savefig(f'{save_dir}predicted_v_field.png', dpi=300)
+    plt.close()
 
     # Evaluate the residuals
     residual_u = np.mean(np.abs(f_u_pred))
