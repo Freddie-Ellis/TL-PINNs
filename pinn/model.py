@@ -219,6 +219,5 @@ class PhysicsInformedNN:
                 if 'lambda_1' in data and 'lambda_2' in data:
                     self.lambda_1.assign(tf.convert_to_tensor(data['lambda_1']))
                     self.lambda_2.assign(tf.convert_to_tensor(data['lambda_2']))
-                print(f"l1 = {self.lambda_1.numpy()}", f"l2 = {self.lambda_2.numpy()}")
 
             print(f"Model loaded from {path}")

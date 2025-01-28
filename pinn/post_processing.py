@@ -69,8 +69,11 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     residual_u = np.mean(np.abs(f_u_pred)) 
     residual_v = np.mean(np.abs(f_v_pred))  
 
+    # Get final lambda1 and lambda2 values
     lambda1 = model.lambda_1.numpy() 
     lambda2 = model.lambda_2.numpy() 
+    error_lambda1 = np.abs(lambda1 - 1.0) * 100
+    error_lambda2 = np.abs(lambda2 - (1/(Re))) / (1/(Re)) * 100
 
     # Format metrics for better readability
     metrics = {
@@ -82,7 +85,9 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         "Residual_u (%)": f"{residual_u:.6e}",
         "Residual_v (%)": f"{residual_v:.6e}",
         "Lambda1": f"{lambda1:.6f}",
-        "Lambda2": f"{lambda2:.6f}"
+        "Lambda2": f"{lambda2:.6f}",
+        "Error Lambda1": f"{error_lambda1:.2f}%",
+        "Error Lambda2": f"{error_lambda1:.2f}%"
     }
 
     # Check if the CSV already exists
@@ -150,5 +155,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
         plt.close(fig)
 
-    #animate_u_predictions(np.linspace(0, 20, 100))
+    animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
+    
     '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
