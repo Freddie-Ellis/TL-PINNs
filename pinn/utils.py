@@ -5,12 +5,19 @@ from scipy.interpolate import griddata
 import tensorflow as tf
 
 def save_model(model, path):
-    save_dict = {}
-    for i, w in enumerate(model.weights):
-        save_dict[f"weight_{i}"] = w.numpy()
-    for i, b in enumerate(model.biases):
-        save_dict[f"bias_{i}"] = b.numpy()
-    np.savez(path, **save_dict)
+    save_data = {}
+    
+    # Save weights and biases
+    for i, (w, b) in enumerate(zip(model.weights, model.biases)):
+        save_data[f'weight_{i}'] = w.numpy()
+        save_data[f'bias_{i}'] = b.numpy()
+    
+    # Save lambda values
+    save_data['lambda_1'] = model.lambda_1.numpy()
+    save_data['lambda_2'] = model.lambda_2.numpy()
+    
+    # Save to file
+    np.savez(path, **save_data)
     print(f"Model saved to {path}")
 
 def plot_loss_history(loss_history, save_path="plots/loss_plot.png"):
