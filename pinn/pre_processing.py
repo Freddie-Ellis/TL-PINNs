@@ -134,14 +134,6 @@ def load_data(filename):
     return {key: data[key] for key in data.files}
 
 def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnitude_animation.gif'):
-    """
-    Visualize the velocity magnitude contours from processed PINN data.
-
-    Parameters:
-    - processed_data: dict, output from `process_reynolds_data` function
-    - save_path: str, path to save the animation GIF
-    """
-
     # Extract processed data
     UU_data = processed_data['UU_data']
     VV_data = processed_data['VV_data']
