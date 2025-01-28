@@ -1,2 +1,0 @@
-Model Path,MSE_u,MSE_v,Relative Error_u (%),Relative Error_v (%),Residual_u (%),Residual_v (%),Lambda1,Lambda2,Error Lambda1,Error Lambda2
-models/test/test_1000.npz,1.713408e-02,5.405490e-02,14.59%,83.66%,4.412025e-03,4.281462e-03,0.003284,0.000293,99.67%,99.67%

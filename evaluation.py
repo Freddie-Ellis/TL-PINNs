@@ -2,6 +2,7 @@ from pinn.post_processing import evaluate_model
 from pinn.config import run_ID
 from pinn.config import Re, nIter
 import os
+from pinn.FFT import FFT
 
 # Define the path to the directory containing the models
 model_dir = f'models/{run_ID}/'
@@ -28,6 +29,11 @@ for model_file in model_files:
         0, 
         f'models/{run_ID}/{model_file}', 
         f'plots/{run_ID}/{model_file_no_ext}/'
+    )
+
+    run_FFT = FFT(
+        f'plots/{run_ID}/{model_file_no_ext}/',
+        f'models/{run_ID}/{model_file}'
     )
     # Save results or analyze predictions
     print(f"Model {model_file} processed successfully.")
