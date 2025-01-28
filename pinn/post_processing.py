@@ -155,6 +155,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
         plt.close(fig)
 
-    animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
+    #animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
     
     '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
