@@ -1,7 +1,6 @@
 import os
 from pinn.model import PhysicsInformedNN
 from pinn.utils import save_model, plot_loss_history
-import numpy as np
 from pinn.config import run_ID, nIter, LAYERS, Re
 from pinn.pre_processing import process_reynolds_data, visualize_velocity_contours
 
@@ -35,6 +34,7 @@ def train_model():
 
     # Plot and save the loss history
     model.plot_loss_history(save_path=f'plots/{run_ID}/{run_ID}_loss_hist.png')
+    model.plot_lambda_history(save_path=f'plots/{run_ID}/{run_ID}_lambda_hist.png')
     print(f'Model Training Complete for {nIter} iterations')
 
     # Save the trained model weights
