@@ -114,7 +114,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         plt.savefig(f"{save_dir}/{filename}", dpi=300)
         plt.close()
 
-    plot_field(u_grid, "True u Field", "True Velocity u", "true_u_field.png")
+    '''plot_field(u_grid, "True u Field", "True Velocity u", "true_u_field.png")
     plot_field(v_grid, "True v Field", "True Velocity v", "true_v_field.png")
     plot_field(griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
                         u_pred.flatten(), (X_grid, Y_grid), method='cubic'), 
@@ -122,7 +122,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     plot_field(griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
                         v_pred.flatten(), (X_grid, Y_grid), method='cubic'), 
                "Predicted v Field", "Predicted Velocity v", "predicted_v_field.png")
-
+'''
     # Relative errors
     error_u = np.abs(u_test_filtered - u_pred) / (np.abs(u_test_filtered) + 1e-6)
     error_v = np.abs(v_test_filtered - v_pred) / (np.abs(v_test_filtered) + 1e-6)

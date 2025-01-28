@@ -1,26 +1,22 @@
 from training import model
 from pinn.config import Re, run_ID
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
-def FFT():
-    model_path = f'models/{run_ID}_{Re}.npz'
+def FFT(save_dir, model_path, x = 1, y = 0):
+
     model.load_model(model_path)
-
-    # Define the spatial point of interest
-    x_input = 1.0  # x-coordinate
-    y_input = 0.0  # y-coordinate
 
     # Define the time range for sampling
     t_values = np.linspace(0, 20, 2000)  # Time values from 0 to 20 seconds, 2000 samples
 
     # Prepare arrays for prediction
-    x_user = np.full((len(t_values), 1), x_input)
-    y_user = np.full((len(t_values), 1), y_input)
+    x_user = np.full((len(t_values), 1), x)
+    y_user = np.full((len(t_values), 1), y)
     t_user = t_values.reshape(-1, 1)
 
     # Get predictions from the trained PINN model
-    u_pred_user, v_pred_user, p_pred_user = model.predict(x_user, y_user, t_user)
+    u_pred_user, v_pred_user, p_pred_user, _, _ = model.predict(x_user, y_user, t_user)
 
     # Choose a signal for FFT (e.g., velocity component u)
     signal = v_pred_user.flatten() - np.mean(v_pred_user)  # Normalize the signal
@@ -41,7 +37,8 @@ def FFT():
     plt.xlim(0, 1)  # Set x-axis range from 0 to 5
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"{save_dir}/log_FFT", dpi=300)
+    plt.close()
 
     # Plot the frequency spectrum on a linear scale
     plt.figure(figsize=(8, 6))
@@ -53,7 +50,9 @@ def FFT():
     plt.xlim(0, 1)
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    plt.savefig(f"{save_dir}/FFT", dpi=300)
+    plt.close()
+
 
     # Plot the time-domain signal
     plt.figure(figsize=(8, 6))
@@ -64,5 +63,7 @@ def FFT():
     plt.grid()
     plt.legend()
     plt.tight_layout()
-    plt.show()
-    print(t_values)
+    plt.savefig(f"{save_dir}/signal", dpi=300)
+    plt.close()
+
+    print('FFT Complete')
