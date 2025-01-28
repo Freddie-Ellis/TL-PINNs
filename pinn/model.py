@@ -137,10 +137,15 @@ class PhysicsInformedNN:
     
     def train(self, nIter):
         start_time = time.time()
+        self.lambda_1_history = []  # Store lambda_1 values
+        self.lambda_2_history = []  # Store lambda_2 values
+
         for it in range(nIter):
             loss_value = self.train_step()
             self.loss_history.append(loss_value.numpy())
-                
+            self.lambda_1_history.append(self.lambda_1.numpy())  # Append current lambda_1
+            self.lambda_2_history.append(self.lambda_2.numpy())  # Append current lambda_2
+
             # Print the progress
             if it % 100 == 0:
                 elapsed = time.time() - start_time
@@ -148,8 +153,9 @@ class PhysicsInformedNN:
                 lambda_2_value = self.lambda_2.numpy()
                 print(f'It: {it}, Loss: {loss_value:.3e}, l1: {lambda_1_value:.3f}, l2: {lambda_2_value:.5f}, Time: {elapsed:.2f}')
                 start_time = time.time()
-                if it % 1000 == 0 and it > 0:
-                    save_model(self, f'models/{run_ID}/{run_ID}_{it}.npz')
+
+            if it % 1000 == 0 and it > 0:
+                save_model(self, f'models/{run_ID}/{run_ID}_{it}.npz')
                     
     def plot_loss_history(self, save_path=f'plots/savehistory_{run_ID}'):
         plt.figure(figsize=(10, 6))
@@ -163,6 +169,32 @@ class PhysicsInformedNN:
         plt.savefig(save_path)
         print(f"Loss history plot saved to {save_path}")
         
+    def plot_lambda_history(self, save_path=f'plots/lambda_history_{run_ID}'):
+        plt.figure(figsize=(12, 8))
+        
+        # Plot lambda_1 history
+        plt.subplot(2, 1, 1)
+        plt.plot(self.lambda_1_history, label='Lambda 1', color='blue')
+        plt.xlabel('Iteration')
+        plt.ylabel('Lambda 1 Value')
+        plt.title('Lambda 1 History During Training')
+        plt.grid(True)
+        plt.legend()
+        
+        # Plot lambda_2 history
+        plt.subplot(2, 1, 2)
+        plt.plot(self.lambda_2_history, label='Lambda 2', color='orange')
+        plt.xlabel('Iteration')
+        plt.ylabel('Lambda 2 Value')
+        plt.title('Lambda 2 History During Training')
+        plt.grid(True)
+        plt.legend()
+
+        # Save the plot
+        plt.tight_layout()
+        plt.savefig(save_path)
+        print(f"Lambda history plot saved to {save_path}")
+
     def predict(self, x_star, y_star, t_star):
         x_star = tf.convert_to_tensor(x_star, dtype=tf.float32)
         y_star = tf.convert_to_tensor(y_star, dtype=tf.float32)
@@ -187,5 +219,6 @@ class PhysicsInformedNN:
                 if 'lambda_1' in data and 'lambda_2' in data:
                     self.lambda_1.assign(tf.convert_to_tensor(data['lambda_1']))
                     self.lambda_2.assign(tf.convert_to_tensor(data['lambda_2']))
-        
+                print(f"l1 = {self.lambda_1.numpy()}", f"l2 = {self.lambda_2.numpy()}")
+
             print(f"Model loaded from {path}")
