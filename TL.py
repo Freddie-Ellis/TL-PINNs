@@ -49,12 +49,12 @@ for model_file in model_files:
     model.train(nIter)
 
     # Plot and save the loss history
-    model.plot_loss_history(save_path=f'plots/{run_ID}{Re_TL}/{run_ID}{Re_TL}_loss_hist.png')
+    model.plot_loss_history(save_path=f'plots/{run_ID}{Re_TL}/{model_file_no_ext}_TL{Re_TL}_loss_hist.png')
     model.plot_lambda_history(save_path=f'plots/{run_ID}{Re_TL}/{run_ID}{Re_TL}_lambda_hist.png')
     print(f'Model Training Complete for {nIter} iterations')
 
     # Save the trained model weights
-    save_model(model, f'models/{run_ID}{Re_TL}/{run_ID}{Re_TL}_{nIter}.npz')
+    save_model(model, f'models/{run_ID}{Re_TL}/{model_file_no_ext}_TL{Re_TL}_{nIter}.npz')
 
     # Save results or analyze predictions
     print(f"Model {model_file} processed successfully.")

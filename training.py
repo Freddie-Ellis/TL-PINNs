@@ -1,6 +1,6 @@
 import os
 from pinn.model import PhysicsInformedNN
-from pinn.utils import save_model, plot_loss_history
+from pinn.utils import save_model
 from pinn.config import run_ID, nIter, LAYERS, Re
 from pinn.pre_processing import process_reynolds_data, visualize_velocity_contours
 
