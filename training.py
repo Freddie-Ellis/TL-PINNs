@@ -3,6 +3,7 @@ from pinn.model import PhysicsInformedNN
 from pinn.utils import save_model
 from pinn.config import run_ID, nIter, LAYERS, Re
 from pinn.pre_processing import process_reynolds_data, visualize_velocity_contours
+from pinn.model_wcp import PhysicsInformedNN_wcp
 
 save_dir = f'models/{run_ID}/'
 os.makedirs(save_dir, exist_ok=True)
@@ -12,7 +13,7 @@ os.makedirs(plots_dir, exist_ok=True)
 
 # Load or process data
 data = process_reynolds_data(Re)
-visualize_velocity_contours(data, save_path=f'plots/{run_ID}/{run_ID}_training_data.gif')
+'''visualize_velocity_contours(data, save_path=f'plots/{run_ID}/{run_ID}_training_data.gif')'''
 
 # Extract processed training data
 x_train = data['x_train']
@@ -22,7 +23,8 @@ u_train = data['u_train']
 v_train = data['v_train']
 
 # Define model
-model = PhysicsInformedNN(x_train, y_train, t_train, u_train, v_train, LAYERS)
+'''model = PhysicsInformedNN(x_train, y_train, t_train, u_train, v_train, LAYERS)'''
+model = PhysicsInformedNN_wcp(x_train, y_train, t_train, u_train, v_train, LAYERS)
 
 def train_model():
     
