@@ -1,6 +1,5 @@
 from pinn.post_processing import evaluate_model
-from pinn.config import run_ID
-from pinn.config import Re, nIter
+from pinn.config import run_ID, Re
 import os
 from pinn.FFT import FFT
 

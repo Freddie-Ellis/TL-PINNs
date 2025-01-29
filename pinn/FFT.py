@@ -1,5 +1,4 @@
 from training import model
-from pinn.config import Re, run_ID
 import numpy as np
 import matplotlib.pyplot as plt
 
