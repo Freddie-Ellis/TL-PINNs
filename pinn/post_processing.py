@@ -87,7 +87,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         "Lambda1": f"{lambda1:.6f}",
         "Lambda2": f"{lambda2:.6f}",
         "Error Lambda1": f"{error_lambda1:.2f}%",
-        "Error Lambda2": f"{error_lambda1:.2f}%"
+        "Error Lambda2": f"{error_lambda2:.2f}%"
     }
 
     # Check if the CSV already exists
@@ -175,7 +175,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/vorticity_animation.gif", writer="pillow", fps=5)
         plt.close(fig)
 
-    animate_vorticity_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
+    #animate_vorticity_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
     
     '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
 
@@ -199,3 +199,5 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
         plt.close(fig)'''
+    #animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
+    

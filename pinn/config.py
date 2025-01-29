@@ -30,7 +30,7 @@ LAYERS = [3, 20, 20, 20, 20, 20, 20, 20, 20, 2]
 LEARNING_RATE = 0.001
 Re = 100    # Set Reynolds number 
 nIter = 10000     # Number of training iterations
-run_ID = f'Re{Re}'      #Unique identifier for the run
+run_ID = f'{Re}_wcp'      #Unique identifier for the run
 
 # Random seed for reproducibility
 SEED = 1234
