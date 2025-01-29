@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def FFT(save_dir, model_path, x = 1, y = 0):
-
     model.load_model(model_path)
 
     # Define the time range for sampling

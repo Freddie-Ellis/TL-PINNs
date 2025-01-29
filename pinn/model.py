@@ -154,7 +154,7 @@ class PhysicsInformedNN:
                 print(f'It: {it}, Loss: {loss_value:.3e}, l1: {lambda_1_value:.3f}, l2: {lambda_2_value:.5f}, Time: {elapsed:.2f}')
                 start_time = time.time()
 
-            if it % 1000 == 0 and it > 0:
+            if it % 10000 == 0 and it > 0:
                 save_model(self, f'models/{run_ID}/{run_ID}_{it}.npz')
                     
     def plot_loss_history(self, save_path=f'plots/savehistory_{run_ID}'):

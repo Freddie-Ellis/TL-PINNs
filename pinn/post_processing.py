@@ -134,7 +134,52 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
                         error_v.flatten(), (X_grid, Y_grid), method='cubic'), 
                "Relative Error in v Field", "Relative Error in v", "relative_error_v.png", cmap="coolwarm")
 
-    # Animation for u predictions
+    # Animation for vorticity predictions
+    def animate_vorticity_predictions(t_values):
+        fig, ax = plt.subplots(figsize=(10, 6))
+        levels = 50
+
+        def update(frame):
+            t_input = np.full_like(x_test_filtered, t_values[frame])
+            u_pred, v_pred, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+            
+            # Interpolate u_pred and v_pred to the grid
+            u_pred_grid = griddata(
+                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                u_pred.flatten(), 
+                (X_grid, Y_grid), 
+                method='cubic'
+            )
+            v_pred_grid = griddata(
+                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                v_pred.flatten(), 
+                (X_grid, Y_grid), 
+                method='cubic'
+            )
+            
+            # Calculate gradients for vorticity
+            u_y, u_x = np.gradient(u_pred_grid, grid_y, grid_x)
+            v_y, v_x = np.gradient(v_pred_grid, grid_y, grid_x)
+
+            # Compute vorticity: ω = ∂v/∂x - ∂u/∂y
+            vorticity = v_x - u_y
+
+            # Clear the axes and plot the vorticity field
+            ax.clear()
+            contour = ax.contourf(X_grid, Y_grid, vorticity, levels=levels, cmap="coolwarm")
+            ax.set_title(f"Predicted Vorticity Field at Time t = {t_values[frame]:.2f}")
+            return contour
+
+        # Create the animation
+        anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
+        anim.save(f"{save_dir}/vorticity_animation.gif", writer="pillow", fps=5)
+        plt.close(fig)
+
+    #animate_vorticity_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
+    
+    '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
+
+    '''# Animation for u predictions
     def animate_u_predictions(t_values):
         fig, ax = plt.subplots(figsize=(10, 6))
         levels = 50
@@ -153,8 +198,4 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
 
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
-        plt.close(fig)
-
-    #animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
-    
-    '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
+        plt.close(fig)'''
