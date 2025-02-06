@@ -176,8 +176,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         plt.close(fig)
 
     #animate_vorticity_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
-    
-    '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
 
     # Animation for u predictions
     def animate_u_predictions(t_values):
@@ -199,5 +197,27 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
         plt.close(fig)
+
     animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
     
+    def animate_v_predictions(t_values):
+        fig, ax = plt.subplots(figsize=(10, 6))
+        levels = 50
+
+        def update(frame):
+            t_input = np.full_like(x_test_filtered, t_values[frame])
+            _, v_pred, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+            v_pred_grid = griddata(
+                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                v_pred.flatten(), (X_grid, Y_grid), method='cubic'
+            )
+            ax.clear()
+            contour = ax.contourf(X_grid, Y_grid, v_pred_grid, levels=levels, cmap="viridis")
+            ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
+            return contour
+
+        anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
+        anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
+        plt.close(fig)
+        
+    #animate_v_predictions(np.linspace(0, 20, 100))
