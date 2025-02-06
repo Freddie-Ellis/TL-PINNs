@@ -179,7 +179,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     
     '''Once complete add a script to delete the temp data files to prevent using up loads of storage on completed models.'''
 
-    '''# Animation for u predictions
+    # Animation for u predictions
     def animate_u_predictions(t_values):
         fig, ax = plt.subplots(figsize=(10, 6))
         levels = 50
@@ -198,6 +198,6 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
 
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
-        plt.close(fig)'''
-    #animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
+        plt.close(fig)
+    animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
     
