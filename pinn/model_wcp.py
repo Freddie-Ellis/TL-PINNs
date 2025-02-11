@@ -119,6 +119,9 @@ class PhysicsInformedNN_wcp:
     @tf.function
     def loss(self):
         # Compute supervised loss (data loss)
+        self.loss_data_history = []  # Store data loss values
+        self.loss_physics_history = []  # Store physics loss values
+    
         u_pred, v_pred, _, _, _ = self.net_NS(self.x, self.y, self.t)
         loss_data = tf.reduce_mean(tf.square(self.u - u_pred)) + \
                     tf.reduce_mean(tf.square(self.v - v_pred))
@@ -127,6 +130,8 @@ class PhysicsInformedNN_wcp:
         _, _, _, f_u_f_pred, f_v_f_pred = self.net_NS(self.x_f, self.y_f, self.t_f)
         loss_physics = tf.reduce_mean(tf.square(f_u_f_pred)) + tf.reduce_mean(tf.square(f_v_f_pred))
 
+        self.loss_data_history.append(loss_data.numpy())
+        self.loss_physics_history.append(loss_physics.numpy())
         # Combine losses
         loss_value = loss_data + loss_physics
         return loss_value
@@ -152,8 +157,6 @@ class PhysicsInformedNN_wcp:
         start_time = time.time()
         self.lambda_1_history = []  # Store lambda_1 values
         self.lambda_2_history = []  # Store lambda_2 values
-        self.loss_data_history = []  # Store data loss values
-        self.loss_physics_history = []  # Store physics loss values
 
         for it in range(nIter):
             loss_value = self.train_step()
@@ -166,13 +169,6 @@ class PhysicsInformedNN_wcp:
                 elapsed = time.time() - start_time
                 lambda_1_value = self.lambda_1.numpy()
                 lambda_2_value = self.lambda_2.numpy()
-                loss_data = tf.reduce_mean(tf.square(self.u - self.net_NS(self.x, self.y, self.t)[0])) + \
-                            tf.reduce_mean(tf.square(self.v - self.net_NS(self.x, self.y, self.t)[1]))
-
-                loss_physics = tf.reduce_mean(tf.square(self.net_NS(self.x_f, self.y_f, self.t_f)[3])) + \
-                            tf.reduce_mean(tf.square(self.net_NS(self.x_f, self.y_f, self.t_f)[4]))
-                self.loss_data_history.append(loss_data.numpy())
-                self.loss_physics_history.append(loss_physics.numpy())
 
                 print(f'It: {it}, Loss: {loss_value:.3e}, l1: {lambda_1_value:.3f}, l2: {lambda_2_value:.5f}, Time: {elapsed:.2f}')
                 start_time = time.time()
