@@ -28,7 +28,7 @@ LAYERS = [3, 20, 20, 20, 20, 20, 20, 20, 20, 2]
 
 # Training parameters
 LEARNING_RATE = 0.001
-Re = 150    # Set Reynolds number 
+Re = 100    # Set Reynolds number 
 nIter = 10000     # Number of training iterations
 run_ID = f'Re{Re}'      #Unique identifier for the run
 

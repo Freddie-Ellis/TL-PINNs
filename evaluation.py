@@ -2,8 +2,10 @@ from pinn.post_processing import evaluate_model
 from pinn.config import run_ID, Re
 import os
 from pinn.FFT import FFT
+from TL import layers_to_freeze, Re_TL
 
 # Define the path to the directory containing the models
+#run_ID = f'{run_ID}_TLwcp{Re_TL}_{layers_to_freeze}' # Use this for the TL models not standard models
 model_dir = f'models/{run_ID}/'
 
 # List all model files in the directory

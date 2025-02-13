@@ -3,6 +3,7 @@ import os
 from pinn.pre_processing import process_reynolds_data, visualize_velocity_contours
 from pinn.model import PhysicsInformedNN
 from pinn.utils import save_model
+from pinn.model_wcp import PhysicsInformedNN_wcp
 
 # Define the path to the directory containing the models
 model_dir = f'models/{run_ID}/'
@@ -37,28 +38,34 @@ else:
     print(f"Found {len(model_files)} models.")
 
 # Iterate through each model
-for model_file in model_files:
-    model_path = os.path.join(model_dir, model_file)
-    print(f"Processing model: {model_path}")
+def TL_training():
 
-    # Define model
-    model = PhysicsInformedNN(x_train, y_train, t_train, u_train, v_train, LAYERS, model_path, layers_to_freeze)
+    for model_file in model_files:
+        model_path = os.path.join(model_dir, model_file)
+        print(f"Processing model: {model_path}")
 
-    model_file_no_ext, _ = os.path.splitext(model_file)
+        # Define model
+        model = PhysicsInformedNN(x_train, y_train, t_train, u_train, v_train, LAYERS, model_path, layers_to_freeze)
 
-    print('Training Model...')
-    model.train(nIter)
+        model_file_no_ext, _ = os.path.splitext(model_file)
 
-    plots_dir = f'plots/{model_file_no_ext}_TL{Re_TL}_{nIter}/'
-    os.makedirs(plots_dir, exist_ok=True)
+        print('Training Model...')
+        model.train(nIter)
 
-    # Plot and save the loss history
-    model.plot_loss_history(save_path=f'{plots_dir}/{model_file_no_ext}_TL{Re_TL}_loss_hist.png')
-    model.plot_lambda_history(save_path=f'{plots_dir}/{run_ID}{Re_TL}_lambda_hist.png')
-    print(f'Model Training Complete for {nIter} iterations')
+        plots_dir = f'plots/{model_file_no_ext}_TL{Re_TL}_{nIter}/'
+        os.makedirs(plots_dir, exist_ok=True)
 
-    # Save the trained model weights
-    save_model(model, f'{save_dir}/{model_file_no_ext}_TL{Re_TL}_{nIter}.npz')
+        # Plot and save the loss history
+        model.plot_loss_history(save_path=f'{plots_dir}/{model_file_no_ext}_TL{Re_TL}_loss_hist.png')
+        model.plot_lambda_history(save_path=f'{plots_dir}/{run_ID}{Re_TL}_lambda_hist.png')
+        print(f'Model Training Complete for {nIter} iterations')
 
-    # Save results or analyze predictions
-    print(f"Model {model_file} processed successfully.")
+        # Save the trained model weights
+        save_model(model, f'{save_dir}/{model_file_no_ext}_TL{Re_TL}_{nIter}.npz')
+
+        # Save results or analyze predictions
+        print(f"Model {model_file} processed successfully.")
+
+# Run training only if executed directly
+if __name__ == "__main__":
+    TL_training()
