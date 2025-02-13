@@ -47,7 +47,19 @@ Skipping registering GPU devices...
 Running on CPU.
 Configuration loaded.
 Data processing began for Reynolds number: 150
-Processing time steps:   0%|          | 0/10 [00:00<?, ?it/s]Processing time steps:  10%|█         | 1/10 [00:00<00:07,  1.14it/s]Processing time steps:  20%|██        | 2/10 [00:01<00:07,  1.14it/s]Processing time steps:  30%|███       | 3/10 [00:02<00:06,  1.14it/s]Processing time steps:  40%|████      | 4/10 [00:03<00:05,  1.15it/s]Processing time steps:  50%|█████     | 5/10 [00:04<00:04,  1.22it/s]Processing time steps:  60%|██████    | 6/10 [00:04<00:03,  1.26it/s]Processing time steps:  70%|███████   | 7/10 [00:05<00:02,  1.27it/s]Processing time steps:  80%|████████  | 8/10 [00:06<00:01,  1.22it/s]Processing time steps:  90%|█████████ | 9/10 [00:07<00:00,  1.18it/s]Processing time steps: 100%|██████████| 10/10 [00:08<00:00,  1.16it/s]Processing time steps: 100%|██████████| 10/10 [00:08<00:00,  1.19it/s]2025-02-06 16:43:08.436648: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
+
+Processing time steps:   0%|          | 0/10 [00:00<?, ?it/s]
+Processing time steps:  10%|█         | 1/10 [00:00<00:07,  1.14it/s]
+Processing time steps:  20%|██        | 2/10 [00:01<00:07,  1.14it/s]
+Processing time steps:  30%|███       | 3/10 [00:02<00:06,  1.14it/s]
+Processing time steps:  40%|████      | 4/10 [00:03<00:05,  1.15it/s]
+Processing time steps:  50%|█████     | 5/10 [00:04<00:04,  1.22it/s]
+Processing time steps:  60%|██████    | 6/10 [00:04<00:03,  1.26it/s]
+Processing time steps:  70%|███████   | 7/10 [00:05<00:02,  1.27it/s]
+Processing time steps:  80%|████████  | 8/10 [00:06<00:01,  1.22it/s]
+Processing time steps:  90%|█████████ | 9/10 [00:07<00:00,  1.18it/s]
+Processing time steps: 100%|██████████| 10/10 [00:08<00:00,  1.16it/s]
+Processing time steps: 100%|██████████| 10/10 [00:08<00:00,  1.19it/s]2025-02-06 16:43:08.436648: I tensorflow/core/platform/cpu_feature_guard.cc:151] This TensorFlow binary is optimized with oneAPI Deep Neural Network Library (oneDNN) to use the following CPU instructions in performance-critical operations:  AVX2 FMA
 To enable them in other operations, rebuild TensorFlow with the appropriate compiler flags.
 
 Data processing completed for Reynolds number: 150

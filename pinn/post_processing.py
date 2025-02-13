@@ -4,7 +4,7 @@ import os
 import numpy as np
 import scipy.io
 from scipy.interpolate import griddata
-from pinn.config import run_ID, nIter
+from pinn.config import run_ID
 from training import model
 import matplotlib.pyplot as plt
 import matplotlib
@@ -90,18 +90,18 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         "Error Lambda2": f"{error_lambda2:.2f}%"
     }
 
-    # Check if the CSV already exists
-    file_exists = os.path.isfile(f'plots/{run_ID}/metrics.csv')
+    # Define the metrics file path
+    metrics_file = f'plots/{run_ID}/metrics.csv'
 
-    # Append metrics to the CSV file
-    with open(f'plots/{run_ID}/metrics.csv', mode='a', newline='') as file:
-        writer = pd.DataFrame([metrics])
-        if not file_exists:
-            writer.to_csv(file, index=False)  # Write headers if the file doesn't exist
-        else:
-            writer.to_csv(file, index=False, header=False)  # Append without headers
+    # Convert dictionary to DataFrame
+    df_metrics = pd.DataFrame([metrics])
 
-    # Plotting
+    # Check if the file exists
+    file_exists = os.path.isfile(metrics_file)
+
+    # Save metrics to CSV correctly
+    df_metrics.to_csv(metrics_file, mode='a', index=False, header=not file_exists)  # Write headers only if the file doesn't exist
+        # Plotting
     levels = 15
 
     def plot_field(field, title, label, filename, cmap="viridis"):
@@ -220,4 +220,4 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
         plt.close(fig)
         
-    #animate_v_predictions(np.linspace(0, 20, 100))
+    animate_v_predictions(np.linspace(0, 20, 100))

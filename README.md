@@ -44,6 +44,6 @@ for Re=150, St=0.173  ==> T=5.78
 for Re=100000, St=0.19996 ==> T=5
 Therefore we converge on a period of 5s, we need a snapshot every 5/3 Seconds.
 
-Change save it -> change print it -> cange save type for Tl -> change config stuff -> change slurm file
+Change save it -> change print it -> change save type for Tl -> change config stuff -> change slurm file
 
 The checkpointed models for the TL saved as the same name as the loaded pre trained model
