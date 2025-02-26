@@ -32,9 +32,4 @@ Re = 100    # Set Reynolds number
 nIter = 10000     # Number of training iterations
 run_ID = f'Re{Re}'      #Unique identifier for the run
 
-# Random seed for reproducibility
-SEED = 1234
-tf.random.set_seed(SEED)
-np.random.seed(SEED)
-
 print("Configuration loaded.")

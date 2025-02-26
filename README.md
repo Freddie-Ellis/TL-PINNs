@@ -17,19 +17,6 @@ Cudnn == 8.1
 matplotlib == 3.2.2  
 Scipy == 1.10.1  
 
-# Naming Convention
-{run_ID}_nIter
-
-n_Iter is number of iterations
-
-run_ID ->
-A_B_C_D:    
-A is the Re of the finished model,  
-B is PINN for a PINN model and TL for a transfer learned model  
-C is the frozen layers if applicable  
-D is something else
-
-
 # Process
 
 For training and verifying PINN model:
