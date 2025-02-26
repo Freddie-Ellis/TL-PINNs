@@ -11,9 +11,10 @@ from pinn.utils import save_model
 
 np.random.seed(1234)
 tf.random.set_seed(1234)
+run_ID = f'{run_ID}wcp'
 
 class PhysicsInformedNN_wcp:
-    def __init__(self, x, y, t, u, v, layers, pretrain_path=None, layers_to_freeze=None, num_collocation=100):
+    def __init__(self, x, y, t, u, v, layers, pretrain_path=None, layers_to_freeze=None, num_collocation=1000):
         X = np.concatenate([np.atleast_2d(x), np.atleast_2d(y), np.atleast_2d(t)], axis=1)
         self.lb = X.min(0)
         self.ub = X.max(0)
@@ -182,8 +183,6 @@ class PhysicsInformedNN_wcp:
     def plot_loss_history(self, save_path=f'plots/savehistory_{run_ID}'):
         plt.figure(figsize=(10, 6))
         plt.plot(self.loss_history, label='Total Loss History')
-        plt.plot(self.loss_data_history, label='Data Loss History')
-        plt.plot(self.loss_physics_history, label='Physics Loss History')
         plt.xlabel('Iteration')
         plt.ylabel('Loss')
         plt.yscale('log')

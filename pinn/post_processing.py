@@ -21,7 +21,7 @@ def relative_l2_error(true, pred):
     return np.linalg.norm(true - pred) / np.linalg.norm(true)
 
 def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-2, y_end=2):
-    # Load the model
+    #run_ID = f'{run_ID}_TLwcp{Re_TL}_{layers_to_freeze}'
     model.load_model(model_path)
 
     # Ensure the save directory exists
@@ -101,7 +101,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
 
     # Save metrics to CSV correctly
     df_metrics.to_csv(metrics_file, mode='a', index=False, header=not file_exists)  # Write headers only if the file doesn't exist
-        # Plotting
+    # Plotting
     levels = 15
 
     def plot_field(field, title, label, filename, cmap="viridis"):
@@ -182,6 +182,18 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         fig, ax = plt.subplots(figsize=(10, 6))
         levels = 50
 
+        # Create an initial frame for the colorbar
+        t_input = np.full_like(x_test_filtered, t_values[0])
+        u_pred, _, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+        u_pred_grid = griddata(
+            (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+            u_pred.flatten(), (X_grid, Y_grid), method='cubic'
+        )
+
+        # Create an initial contour plot
+        contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="viridis")
+        cbar = fig.colorbar(contour, ax=ax, label="Velocity (u)")
+
         def update(frame):
             t_input = np.full_like(x_test_filtered, t_values[frame])
             u_pred, _, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
@@ -189,10 +201,13 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
                 (x_test_filtered.flatten(), y_test_filtered.flatten()), 
                 u_pred.flatten(), (X_grid, Y_grid), method='cubic'
             )
-            ax.clear()
+            
+            # Update contour plot without clearing the colorbar
+            ax.collections.clear()  # Clears only the contours, not the whole axis
             contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="viridis")
             ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
-            return contour
+
+            return contour.collections  # Return collections for animation
 
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
@@ -220,4 +235,4 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
         plt.close(fig)
         
-    animate_v_predictions(np.linspace(0, 20, 100))
+    #animate_v_predictions(np.linspace(0, 20, 100))
