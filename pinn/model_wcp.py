@@ -9,6 +9,9 @@ import tensorflow as tf
 from pinn.config import run_ID, LEARNING_RATE
 from pinn.utils import save_model
 
+np.random.seed(1234)
+tf.random.set_seed(1234)
+
 class PhysicsInformedNN_wcp:
     def __init__(self, x, y, t, u, v, layers, pretrain_path=None, layers_to_freeze=None, num_collocation=100):
         X = np.concatenate([np.atleast_2d(x), np.atleast_2d(y), np.atleast_2d(t)], axis=1)

@@ -47,3 +47,5 @@ Therefore we converge on a period of 5s, we need a snapshot every 5/3 Seconds.
 Change save it -> change print it -> change save type for Tl -> change config stuff -> change slurm file
 
 The checkpointed models for the TL saved as the same name as the loaded pre trained model
+
+when TL try reducing the impact lambda 1 has on the loss, this ensures once l1 is found as = 1 it wont change as much.
