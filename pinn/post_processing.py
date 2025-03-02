@@ -38,7 +38,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     y_test = coord_data[:, 1:2]
     u_test = vel_data[:, 0, snap]
     v_test = vel_data[:, 1, snap]
-
+    
     # Apply spatial filtering
     mask = ((x_test >= x_start) & (x_test <= x_end)) & ((y_test >= y_start) & (y_test <= y_end))
     x_test_filtered = x_test[mask].reshape(-1, 1)
@@ -47,8 +47,8 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     v_test_filtered = v_test[mask.flatten()].reshape(-1, 1)
 
     # Create grid for plotting
-    grid_x = np.linspace(x_start, x_end, 100)
-    grid_y = np.linspace(y_start, y_end, 100)
+    grid_x = np.linspace(x_start, x_end, 500)
+    grid_y = np.linspace(y_start, y_end, 500)
     X_grid, Y_grid = np.meshgrid(grid_x, grid_y)
 
     # Predict
@@ -180,7 +180,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     # Animation for u predictions
     def animate_u_predictions(t_values):
         fig, ax = plt.subplots(figsize=(10, 6))
-        levels = 50
+        levels = 200
 
         # Create an initial frame for the colorbar
         t_input = np.full_like(x_test_filtered, t_values[0])
@@ -191,7 +191,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         )
 
         # Create an initial contour plot
-        contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="viridis")
+        contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="bwr")
         cbar = fig.colorbar(contour, ax=ax, label="Velocity (u)")
 
         def update(frame):
@@ -204,7 +204,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
             
             # Update contour plot without clearing the colorbar
             ax.collections.clear()  # Clears only the contours, not the whole axis
-            contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="viridis")
+            contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="bwr")
             ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
 
             return contour.collections  # Return collections for animation
@@ -227,7 +227,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
                 v_pred.flatten(), (X_grid, Y_grid), method='cubic'
             )
             ax.clear()
-            contour = ax.contourf(X_grid, Y_grid, v_pred_grid, levels=levels, cmap="viridis")
+            contour = ax.contourf(X_grid, Y_grid, v_pred_grid, levels=levels, cmap="siesmic")
             ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
             return contour
 

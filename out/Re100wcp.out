@@ -1,0 +1,173 @@
+Running SLURM prolog script on pink52.cluster.local
+===============================================================================
+Job started on Fri Feb 28 21:04:44 GMT 2025
+Job ID          : 7120010
+Job name        : Re100wcp
+WorkDir         : /mainfs/lyceum/fe1g22
+Command         : /mainfs/lyceum/fe1g22/TL-PINN-training.slurm
+Partition       : lyceum
+Num hosts       : 1
+Num cores       : 8
+Num of tasks    : 1
+Hosts allocated : pink52
+Job Output Follows ...
+===============================================================================
+Fri Feb 28 21:04:54 2025       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.104.05             Driver Version: 535.104.05   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA GeForce GTX 1080 Ti     Off | 00000000:82:00.0 Off |                  N/A |
+| 23%   27C    P8               9W / 250W |      0MiB / 11264MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+GPU detected and configured.
+Configuration loaded.
+Loading cached data from temp/data_re100_35x15x10.npz
+Data loaded from temp/data_re100_35x15x10.npz
+Frozen Layers: []
+Training Model...
+It: 0, Loss: 8.012e-01, l1: -0.000, l2: 0.00099, Time: 14.27
+It: 1000, Loss: 8.283e-02, l1: 0.001, l2: 0.00014, Time: 27.80
+It: 2000, Loss: 7.940e-02, l1: 0.014, l2: 0.00018, Time: 26.52
+It: 3000, Loss: 7.978e-02, l1: 0.099, l2: 0.00276, Time: 28.06
+It: 4000, Loss: 5.429e-02, l1: 0.738, l2: 0.01729, Time: 33.30
+It: 5000, Loss: 2.078e-02, l1: 0.860, l2: 0.01351, Time: 31.35
+It: 6000, Loss: 1.423e-02, l1: 0.899, l2: 0.01769, Time: 32.31
+It: 7000, Loss: 1.033e-02, l1: 0.927, l2: 0.01870, Time: 33.85
+It: 8000, Loss: 8.192e-03, l1: 0.941, l2: 0.01825, Time: 31.67
+It: 9000, Loss: 6.608e-03, l1: 0.952, l2: 0.01676, Time: 35.02
+It: 10000, Loss: 5.554e-03, l1: 0.960, l2: 0.01533, Time: 33.58
+Model saved to models/Re100wcp/Re100wcp_10000.npz
+It: 11000, Loss: 4.758e-03, l1: 0.965, l2: 0.01439, Time: 28.65
+It: 12000, Loss: 4.278e-03, l1: 0.967, l2: 0.01393, Time: 28.95
+It: 13000, Loss: 3.653e-03, l1: 0.969, l2: 0.01323, Time: 23.16
+It: 14000, Loss: 3.457e-03, l1: 0.971, l2: 0.01298, Time: 22.33
+It: 15000, Loss: 2.908e-03, l1: 0.973, l2: 0.01267, Time: 29.50
+It: 16000, Loss: 2.746e-03, l1: 0.975, l2: 0.01260, Time: 35.55
+It: 17000, Loss: 3.094e-03, l1: 0.977, l2: 0.01254, Time: 32.65
+It: 18000, Loss: 2.437e-03, l1: 0.979, l2: 0.01244, Time: 27.25
+It: 19000, Loss: 1.937e-03, l1: 0.980, l2: 0.01210, Time: 23.53
+It: 20000, Loss: 1.856e-03, l1: 0.982, l2: 0.01196, Time: 29.05
+Model saved to models/Re100wcp/Re100wcp_20000.npz
+It: 21000, Loss: 2.074e-03, l1: 0.983, l2: 0.01195, Time: 26.11
+It: 22000, Loss: 1.638e-03, l1: 0.983, l2: 0.01187, Time: 30.26
+It: 23000, Loss: 1.651e-03, l1: 0.984, l2: 0.01180, Time: 33.26
+It: 24000, Loss: 1.474e-03, l1: 0.984, l2: 0.01165, Time: 30.42
+It: 25000, Loss: 1.377e-03, l1: 0.985, l2: 0.01172, Time: 36.83
+It: 26000, Loss: 1.218e-03, l1: 0.986, l2: 0.01166, Time: 33.91
+It: 27000, Loss: 1.136e-03, l1: 0.986, l2: 0.01160, Time: 28.97
+It: 28000, Loss: 1.136e-03, l1: 0.987, l2: 0.01156, Time: 27.71
+It: 29000, Loss: 1.099e-03, l1: 0.987, l2: 0.01161, Time: 28.51
+It: 30000, Loss: 1.005e-03, l1: 0.987, l2: 0.01152, Time: 22.96
+Model saved to models/Re100wcp/Re100wcp_30000.npz
+It: 31000, Loss: 1.009e-03, l1: 0.987, l2: 0.01148, Time: 30.94
+It: 32000, Loss: 9.181e-04, l1: 0.988, l2: 0.01144, Time: 31.88
+It: 33000, Loss: 8.639e-04, l1: 0.988, l2: 0.01145, Time: 29.26
+It: 34000, Loss: 8.594e-04, l1: 0.988, l2: 0.01148, Time: 27.36
+It: 35000, Loss: 8.804e-04, l1: 0.989, l2: 0.01141, Time: 29.94
+It: 36000, Loss: 7.662e-04, l1: 0.989, l2: 0.01140, Time: 22.02
+It: 37000, Loss: 7.339e-04, l1: 0.989, l2: 0.01144, Time: 28.41
+It: 38000, Loss: 7.211e-04, l1: 0.989, l2: 0.01145, Time: 25.66
+It: 39000, Loss: 1.151e-03, l1: 0.990, l2: 0.01143, Time: 22.09
+It: 40000, Loss: 8.024e-04, l1: 0.990, l2: 0.01149, Time: 23.32
+Model saved to models/Re100wcp/Re100wcp_40000.npz
+It: 41000, Loss: 7.703e-04, l1: 0.990, l2: 0.01149, Time: 24.59
+It: 42000, Loss: 6.732e-04, l1: 0.990, l2: 0.01145, Time: 23.52
+It: 43000, Loss: 6.417e-04, l1: 0.990, l2: 0.01149, Time: 23.07
+It: 44000, Loss: 5.764e-04, l1: 0.990, l2: 0.01147, Time: 32.79
+It: 45000, Loss: 5.846e-04, l1: 0.990, l2: 0.01151, Time: 24.98
+It: 46000, Loss: 6.081e-04, l1: 0.990, l2: 0.01148, Time: 24.27
+It: 47000, Loss: 6.473e-04, l1: 0.991, l2: 0.01157, Time: 24.75
+It: 48000, Loss: 6.363e-04, l1: 0.990, l2: 0.01156, Time: 22.65
+It: 49000, Loss: 5.185e-04, l1: 0.991, l2: 0.01153, Time: 23.01
+It: 50000, Loss: 5.860e-04, l1: 0.991, l2: 0.01154, Time: 32.21
+Model saved to models/Re100wcp/Re100wcp_50000.npz
+It: 51000, Loss: 5.090e-04, l1: 0.991, l2: 0.01158, Time: 26.29
+It: 52000, Loss: 4.702e-04, l1: 0.991, l2: 0.01159, Time: 28.13
+It: 53000, Loss: 4.610e-04, l1: 0.991, l2: 0.01161, Time: 28.53
+It: 54000, Loss: 4.387e-04, l1: 0.992, l2: 0.01158, Time: 30.37
+It: 55000, Loss: 4.715e-04, l1: 0.991, l2: 0.01159, Time: 22.30
+It: 56000, Loss: 4.415e-04, l1: 0.991, l2: 0.01164, Time: 22.26
+It: 57000, Loss: 4.802e-04, l1: 0.992, l2: 0.01166, Time: 28.83
+It: 58000, Loss: 3.999e-04, l1: 0.992, l2: 0.01163, Time: 29.30
+It: 59000, Loss: 3.884e-04, l1: 0.992, l2: 0.01163, Time: 25.99
+It: 60000, Loss: 5.730e-04, l1: 0.992, l2: 0.01167, Time: 28.34
+Model saved to models/Re100wcp/Re100wcp_60000.npz
+It: 61000, Loss: 5.015e-04, l1: 0.992, l2: 0.01163, Time: 22.45
+It: 62000, Loss: 3.659e-04, l1: 0.992, l2: 0.01165, Time: 25.07
+It: 63000, Loss: 3.978e-04, l1: 0.992, l2: 0.01165, Time: 25.35
+It: 64000, Loss: 3.701e-04, l1: 0.992, l2: 0.01165, Time: 30.09
+It: 65000, Loss: 4.016e-04, l1: 0.992, l2: 0.01167, Time: 24.99
+It: 66000, Loss: 3.611e-04, l1: 0.992, l2: 0.01166, Time: 28.31
+It: 67000, Loss: 3.266e-04, l1: 0.993, l2: 0.01164, Time: 27.90
+It: 68000, Loss: 3.418e-04, l1: 0.993, l2: 0.01166, Time: 24.15
+It: 69000, Loss: 3.201e-04, l1: 0.993, l2: 0.01165, Time: 23.82
+It: 70000, Loss: 3.070e-04, l1: 0.993, l2: 0.01162, Time: 24.72
+Model saved to models/Re100wcp/Re100wcp_70000.npz
+It: 71000, Loss: 3.025e-04, l1: 0.993, l2: 0.01160, Time: 27.76
+It: 72000, Loss: 3.860e-04, l1: 0.993, l2: 0.01167, Time: 26.58
+It: 73000, Loss: 3.191e-04, l1: 0.993, l2: 0.01160, Time: 23.78
+It: 74000, Loss: 3.419e-04, l1: 0.993, l2: 0.01159, Time: 37.09
+It: 75000, Loss: 2.806e-04, l1: 0.994, l2: 0.01162, Time: 26.44
+It: 76000, Loss: 5.152e-04, l1: 0.993, l2: 0.01170, Time: 23.73
+It: 77000, Loss: 3.044e-04, l1: 0.993, l2: 0.01163, Time: 25.64
+It: 78000, Loss: 2.645e-04, l1: 0.994, l2: 0.01159, Time: 27.04
+It: 79000, Loss: 2.523e-04, l1: 0.994, l2: 0.01159, Time: 21.98
+It: 80000, Loss: 6.479e-04, l1: 0.994, l2: 0.01153, Time: 26.47
+Model saved to models/Re100wcp/Re100wcp_80000.npz
+It: 81000, Loss: 5.773e-04, l1: 0.994, l2: 0.01151, Time: 24.32
+It: 82000, Loss: 2.501e-04, l1: 0.994, l2: 0.01160, Time: 23.08
+It: 83000, Loss: 5.258e-04, l1: 0.994, l2: 0.01164, Time: 23.19
+It: 84000, Loss: 2.436e-04, l1: 0.994, l2: 0.01156, Time: 35.44
+It: 85000, Loss: 2.374e-04, l1: 0.995, l2: 0.01157, Time: 25.88
+It: 86000, Loss: 3.284e-04, l1: 0.995, l2: 0.01151, Time: 26.35
+It: 87000, Loss: 2.198e-04, l1: 0.995, l2: 0.01156, Time: 24.60
+It: 88000, Loss: 2.172e-04, l1: 0.995, l2: 0.01157, Time: 25.51
+It: 89000, Loss: 2.788e-04, l1: 0.995, l2: 0.01154, Time: 22.01
+It: 90000, Loss: 2.397e-04, l1: 0.994, l2: 0.01153, Time: 22.21
+Model saved to models/Re100wcp/Re100wcp_90000.npz
+It: 91000, Loss: 2.343e-04, l1: 0.995, l2: 0.01156, Time: 22.57
+It: 92000, Loss: 1.963e-04, l1: 0.995, l2: 0.01154, Time: 27.72
+It: 93000, Loss: 2.204e-04, l1: 0.995, l2: 0.01153, Time: 28.62
+It: 94000, Loss: 2.105e-04, l1: 0.995, l2: 0.01150, Time: 26.95
+It: 95000, Loss: 3.111e-04, l1: 0.995, l2: 0.01159, Time: 22.70
+It: 96000, Loss: 1.907e-04, l1: 0.995, l2: 0.01151, Time: 24.40
+It: 97000, Loss: 2.220e-04, l1: 0.996, l2: 0.01149, Time: 27.19
+It: 98000, Loss: 1.774e-04, l1: 0.996, l2: 0.01151, Time: 31.73
+It: 99000, Loss: 3.206e-04, l1: 0.995, l2: 0.01161, Time: 33.34
+Loss history plot saved to plots/Re100wcp/Re100wcp_loss_hist.png
+Lambda history plot saved to plots/Re100wcp/Re100wcp_lambda_hist.png
+Model Training Complete for 100000 iterations
+Model saved to models/Re100wcp/Re100wcp_100000.npz
+==============================================================================
+Running epilogue script on pink52.
+
+Submit time  : 2025-02-28T21:04:42
+Start time   : 2025-02-28T21:04:43
+End time     : 2025-02-28T21:52:18
+Elapsed time : 00:47:35 (Timelimit=1-12:00:00)
+
+Job ID: 7120010
+Cluster: i5
+User/Group: fe1g22/pe
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 8
+CPU Utilized: 00:46:26
+CPU Efficiency: 12.20% of 06:20:40 core-walltime
+Job Wall-clock time: 00:47:35
+Memory Utilized: 2.05 GB
+Memory Efficiency: 0.00% of 16.00 B
+

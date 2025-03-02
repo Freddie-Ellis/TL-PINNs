@@ -36,3 +36,8 @@ Change save it -> change print it -> change save type for Tl -> change config st
 The checkpointed models for the TL saved as the same name as the loaded pre trained model
 
 when TL try reducing the impact lambda 1 has on the loss, this ensures once l1 is found as = 1 it wont change as much.
+
+Use snapshots for transient plotting
+
+Ask about schematic 
+Ask about theory for the PINN in method or background section 

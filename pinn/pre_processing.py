@@ -157,7 +157,7 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)  # Adjust plot area
 
     # Initial contour plot
-    contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, 0], levels=50, cmap='viridis')
+    contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, 0], levels=50, cmap='bwr')
     colorbar = plt.colorbar(contour, ax=ax, pad=0.02)  # Reduce padding between colorbar and plot
     colorbar.set_label("Velocity Magnitude")
 
@@ -170,7 +170,7 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     # Update function for animation
     def update(frame):
         ax.collections.clear()  # Clears only the contours without resetting the entire figure
-        contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, frame], levels=50, cmap='viridis')
+        contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, frame], levels=50, cmap='bwr')
         ax.set_title(f"Velocity Magnitude Contour at Time t = {t_data_spec[frame] * 0.08:.2f}")
         ax.set_xlabel("x")
         ax.set_ylabel("y")
