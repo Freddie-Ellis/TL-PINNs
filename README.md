@@ -39,5 +39,4 @@ when TL try reducing the impact lambda 1 has on the loss, this ensures once l1 i
 
 Use snapshots for transient plotting
 
-Ask about schematic 
-Ask about theory for the PINN in method or background section 
+
