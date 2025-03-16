@@ -47,7 +47,9 @@ def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
 
     # Select specific time points
     selected_time_indices = np.linspace(time_start, time_end, num_time_points).astype(int)
-    t_data_spec = t_data[selected_time_indices]
+    print(selected_time_indices)
+    print(t_data.shape)
+    t_data_spec = t_data[:,selected_time_indices]
 
     # Create a linear space for the spatial domain
     x_values = np.linspace(x_start, x_end, num_points_x)
