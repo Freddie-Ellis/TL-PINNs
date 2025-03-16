@@ -1,12 +1,42 @@
 from training import model
 import numpy as np
 import matplotlib.pyplot as plt
+from pinn.pre_processing import process_reynolds_data
+from scipy.interpolate import griddata
 
-def FFT(save_dir, model_path, x = 1, y = 0):
+def FFT(save_dir, model_path, Re_TL, x=1, y=0):
     model.load_model(model_path)
 
-    # Define the time range for sampling
-    t_values = np.linspace(0, 20, 2000)  # Time values from 0 to 20 seconds, 2000 samples
+    data = process_reynolds_data(Re_TL, 0, 250, 250)
+
+    # Extract components
+    x_real = data['x_train'].squeeze()
+    y_real = data['y_train'].squeeze()
+    t_data = data['t_train'].squeeze()
+    v_real = data['v_train'].squeeze()
+
+    # Define the target point for interpolation
+    target_point = np.array([[1, 0]])  # x=1, y=0
+
+    # Interpolate for each time step
+    unique_times = np.unique(t_data)
+    v_interp = []
+
+    for t in unique_times:
+        # Get data for the current time step
+        mask = t_data == t
+        points = np.column_stack((x_real[mask], y_real[mask]))  # Existing (x, y) points
+        values = v_real[mask]  # Corresponding velocity values
+
+        # Interpolate at (x=1, y=0)
+        v_at_x1_y0 = griddata(points, values, target_point, method='cubic')
+        v_interp.append(v_at_x1_y0[0])  # Store interpolated velocity
+
+    # Convert to numpy array for plotting
+    v_interp = np.array(v_interp)
+    unique_times = np.linspace(0, 250, len(v_interp)) * 0.08
+
+    t_values = np.linspace(0, np.max(t_data), 2000)  # Time values from 0 to 20 seconds, 2000 samples
 
     # Prepare arrays for prediction
     x_user = np.full((len(t_values), 1), x)
@@ -14,7 +44,7 @@ def FFT(save_dir, model_path, x = 1, y = 0):
     t_user = t_values.reshape(-1, 1)
 
     # Get predictions from the trained PINN model
-    u_pred_user, v_pred_user, p_pred_user, _, _ = model.predict(x_user, y_user, t_user)
+    _, v_pred_user, _, _, _ = model.predict(x_user, y_user, t_user)
 
     # Choose a signal for FFT (e.g., velocity component u)
     signal = v_pred_user.flatten() - np.mean(v_pred_user)  # Normalize the signal
@@ -54,14 +84,16 @@ def FFT(save_dir, model_path, x = 1, y = 0):
 
     # Plot the time-domain signal
     plt.figure(figsize=(8, 6))
-    plt.plot(t_values, signal, label="v-velocity (time-domain)")
+    plt.plot(unique_times, v_interp, label="Interpolated Velocity at (x=1, y=0)", color='b')
+    plt.plot(t_values, v_pred_user, label="NN Prediction", color='r', linestyle='solid')
     plt.xlabel("Time (s)")
     plt.ylabel("Amplitude")
     plt.title("Time-Domain Signal of Predicted v at (x=1, y=0)")
     plt.grid()
     plt.legend()
     plt.tight_layout()
-    plt.savefig(f"{save_dir}/signal", dpi=300)
+    plt.savefig(f"{save_dir}/signal.png", dpi=300)
     plt.close()
+    
 
     print('FFT Complete')
