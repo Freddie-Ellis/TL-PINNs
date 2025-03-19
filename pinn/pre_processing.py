@@ -151,15 +151,14 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     x_values = np.linspace(X_spec.min(), X_spec.max(), UU_data.shape[1])  # Ensure correct x size
     y_values = np.linspace(Y_spec.min(), Y_spec.max(), UU_data.shape[0])  # Ensure correct y size
 
+    print("X range:", x_values.min(), x_values.max())  # Debugging
+    print("Y range:", y_values.min(), y_values.max())  # Debugging
+
     # Setup figure
     fig, ax = plt.subplots(figsize=(8, 6))
 
-    # Reduce white space around the plot
-    plt.tight_layout()
-    fig.subplots_adjust(left=0.1, right=0.9, top=0.9, bottom=0.1)  # Adjust plot area
-
     # Initial contour plot
-    contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, 0], levels=50, cmap='bwr')
+    contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, 0], cmap='bwr')
     colorbar = plt.colorbar(contour, ax=ax, pad=0.02)  # Reduce padding between colorbar and plot
     colorbar.set_label("Velocity Magnitude")
 
@@ -167,16 +166,20 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     ax.set_title(f"Velocity Magnitude Contour at Time t = {t_data_spec[0]:.2f}")
     ax.set_xlabel("x")
     ax.set_ylabel("y")
-    ax.axis('equal')
-
+    ax.set_xlim(1, 8)
+    ax.set_ylim(-2, 2)
+    ax.set_aspect('equal')
     # Update function for animation
     def update(frame):
         ax.collections.clear()  # Clears only the contours without resetting the entire figure
-        contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, frame], levels=50, cmap='bwr')
+        contour = ax.contourf(x_values, y_values, velocity_magnitude[:, :, frame], cmap='bwr')
         ax.set_title(f"Velocity Magnitude Contour at Time t = {t_data_spec[frame] * 0.08:.2f}")
         ax.set_xlabel("x")
         ax.set_ylabel("y")
-        ax.axis('equal')
+        ax.set_xlim(1, 8)
+        ax.set_ylim(-2, 2)
+        ax.set_aspect('equal')
+        plt.savefig(f'frame{frame}')
         return contour.collections  # Return collections for animation
 
     # Create animation
