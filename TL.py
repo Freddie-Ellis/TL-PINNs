@@ -9,7 +9,7 @@ from pinn.model_wcp import PhysicsInformedNN_wcp
 model_dir = f'models/{run_ID}/'
 model_files = sorted([f for f in os.listdir(model_dir) if f.endswith(".npz")])
 
-run_ID = f"{run_ID}_TL"
+run_ID = f"{run_ID}_TLnyq2"
 Re_TL = 150
 layers_to_freeze = [1,2]
 
@@ -22,7 +22,7 @@ os.makedirs(plots_dir, exist_ok=True)
 
 # Load or process data
 data = process_reynolds_data(Re_TL)
-#visualize_velocity_contours(data, save_path=f'{plots_dir}/{run_ID}{Re_TL}_training_data.gif')
+visualize_velocity_contours(data, save_path=f'{plots_dir}/{run_ID}{Re_TL}_training_data.gif')
 
 # Extract processed training data
 x_train = data['x_train']

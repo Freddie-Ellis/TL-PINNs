@@ -151,9 +151,6 @@ def visualize_velocity_contours(processed_data, save_path='plots/velocity_magnit
     x_values = np.linspace(X_spec.min(), X_spec.max(), UU_data.shape[1])  # Ensure correct x size
     y_values = np.linspace(Y_spec.min(), Y_spec.max(), UU_data.shape[0])  # Ensure correct y size
 
-    print("X range:", x_values.min(), x_values.max())  # Debugging
-    print("Y range:", y_values.min(), y_values.max())  # Debugging
-
     # Setup figure
     fig, ax = plt.subplots(figsize=(8, 6))
 

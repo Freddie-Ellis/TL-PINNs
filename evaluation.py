@@ -24,16 +24,17 @@ for model_file in model_files:
         
     model_file_no_ext, _ = os.path.splitext(model_file)
 
-    run_FFT = FFT(
-        f'plots/{run_ID}/{model_file_no_ext}/',
-        f'models/{run_ID}/{model_file}', 150
-    )
-    # Pass the modified filename for saving plots
+# Pass the modified filename for saving plots
     results = evaluate_model(
         Re, 
         0, 
         f'models/{run_ID}/{model_file}', 
         f'plots/{run_ID}/{model_file_no_ext}/'
+    )
+    
+    run_FFT = FFT(
+        f'plots/{run_ID}/{model_file_no_ext}/',
+        f'models/{run_ID}/{model_file}', 150
     )
 
     # Save results or analyze predictions
