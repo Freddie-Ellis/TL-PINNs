@@ -37,6 +37,4 @@ The checkpointed models for the TL saved as the same name as the loaded pre trai
 
 when TL try reducing the impact lambda 1 has on the loss, this ensures once l1 is found as = 1 it wont change as much.
 
-Use snapshots for transient plotting
-
 

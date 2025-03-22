@@ -104,7 +104,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     # Plotting
     levels = 15
 
-    def plot_field(field, title, label, filename, cmap="viridis"):
+    def plot_field(field, title, label, filename, cmap="bwr"):
         plt.figure(figsize=(10, 6))
         plt.contourf(X_grid, Y_grid, field, levels=levels, cmap=cmap)
         plt.colorbar(label=label)
@@ -180,19 +180,21 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     # Animation for u predictions
     def animate_u_predictions(t_values):
         fig, ax = plt.subplots(figsize=(10, 6))
-        levels = 200
 
-        # Create an initial frame for the colorbar
+        # Initial frame for colorbar and plot
         t_input = np.full_like(x_test_filtered, t_values[0])
         u_pred, _, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
         u_pred_grid = griddata(
             (x_test_filtered.flatten(), y_test_filtered.flatten()), 
             u_pred.flatten(), (X_grid, Y_grid), method='cubic'
         )
-
-        # Create an initial contour plot
-        contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="bwr")
-        cbar = fig.colorbar(contour, ax=ax, label="Velocity (u)")
+        u_pred_min = np.min(u_pred)
+        u_pred_max = np.max(u_pred)
+        levels = np.linspace(u_pred_min, u_pred_max, 11)
+        # Create initial filled contour and colorbar
+        contourf_plot = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="bwr")
+        contour_lines = ax.contour(X_grid, Y_grid, u_pred_grid, levels=levels, colors='k', linewidths=0.5)
+        cbar = fig.colorbar(contourf_plot, ax=ax, label="Velocity (u)")
 
         def update(frame):
             t_input = np.full_like(x_test_filtered, t_values[frame])
@@ -201,20 +203,67 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
                 (x_test_filtered.flatten(), y_test_filtered.flatten()), 
                 u_pred.flatten(), (X_grid, Y_grid), method='cubic'
             )
-            
-            # Update contour plot without clearing the colorbar
-            ax.collections.clear()  # Clears only the contours, not the whole axis
-            contour = ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="bwr")
-            ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
 
-            return contour.collections  # Return collections for animation
+            ax.collections.clear()  # Clear both filled and line contours
+            ax.contourf(X_grid, Y_grid, u_pred_grid, levels=levels, cmap="bwr")
+            contour_lines = ax.contour(X_grid, Y_grid, u_pred_grid, levels=levels, colors='k', linewidths=0.5)
+
+            ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
+            if frame < 5:
+                plt.savefig(f'frames/res_frame{frame}.png', dpi=200, bbox_inches='tight')
+            return contour_lines.collections
 
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
-        anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
+        anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
 
-    animate_u_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
-    
+    animate_u_predictions(np.linspace(0, 20, 100))
+
+    # Animation for pressure predictions
+    def animate_p_predictions(t_values):
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Initial frame for colorbar and plot
+        t_input = np.full_like(x_test_filtered, t_values[0])
+        _, _, p_pred, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+        p_pred_grid = griddata(
+            (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+            p_pred.flatten(), (X_grid, Y_grid), method='cubic'
+        )
+        p_pred_min = np.min(p_pred)
+        p_pred_max = np.max(p_pred)
+        levels = np.linspace(p_pred_min, p_pred_max, 11)
+
+        # Create initial filled contour and colorbar
+        contourf_plot = ax.contourf(X_grid, Y_grid, p_pred_grid, levels=levels, cmap="bwr")
+        contour_lines = ax.contour(X_grid, Y_grid, p_pred_grid, levels=levels, colors='k', linewidths=0.5)
+        cbar = fig.colorbar(contourf_plot, ax=ax, label="Pressure (p)")
+
+        def update(frame):
+            t_input = np.full_like(x_test_filtered, t_values[frame])
+            _, _, p_pred, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+            p_pred_grid = griddata(
+                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                p_pred.flatten(), (X_grid, Y_grid), method='cubic'
+            )
+
+            ax.collections.clear()  # Clear both filled and line contours
+            ax.contourf(X_grid, Y_grid, p_pred_grid, levels=levels, cmap="bwr")
+            contour_lines = ax.contour(X_grid, Y_grid, p_pred_grid, levels=levels, colors='k', linewidths=0.5)
+
+            ax.set_title(f"Predicted Pressure Field at Time t = {t_values[frame]:.2f}")
+            if frame < 5:
+                plt.savefig(f'frames/result/pres_frame{frame}.png', dpi=200, bbox_inches='tight')
+            return contour_lines.collections
+
+        anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
+        anim.save(f"{save_dir}/pressure_animation.gif", writer="pillow", fps=5, dpi=200)
+        plt.close(fig)
+
+    # Example usage:
+    animate_p_predictions(np.linspace(0, 20, 100))
+
+
     def animate_v_predictions(t_values):
         fig, ax = plt.subplots(figsize=(10, 6))
         levels = 50
