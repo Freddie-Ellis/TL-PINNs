@@ -1,40 +1,83 @@
-# TL-PINNs
-Third year individual project on Transfer Learning (TL) integrated PINNs for fluid mechanics.
-I'm currently connecting this repository to MobaXterm for HPC usage.
+# TL-PINNs: Transfer Learning with Physics-Informed Neural Networks
 
-Workflow is as follows:
+A third-year individual research project exploring the integration of **Transfer Learning (TL)** into **Physics-Informed Neural Networks (PINNs)** for fluid mechanics applications.
 
-Make change in VS -> Push to GitHub -> pull on Moba using 'git reset --hard -> git clean -fd -> git pull origin main' from within cd 
+---
 
-Make change in Moba -> Push to GitHub ('make the change' -> git status -> git add . -> git commit -m "update message" -> git push origin main) -> Pull on local machine in GitHub Desktop
+## 🧠 Project Overview
 
-# Requirements
+This project investigates how pre-trained PINNs can be efficiently adapted to new flow regimes using transfer learning techniques. The models are trained to solve PDEs governing fluid flow (e.g., Navier-Stokes) using limited data, and retrained for new Reynolds numbers or boundary conditions.
 
-TensorFlow == 2.7.0  
-NumPy == 1.24.4  
-Cuda == 11.2  
-Cudnn == 8.1  
-matplotlib == 3.2.2  
-Scipy == 1.10.1  
+---
 
-# Process
+## 📦 Requirements
 
-For training and verifying PINN model:
-Clean and process source data for training case A -> Train model A on said data -> Clean and process test data -> Make and plot flow predictions -> Compare predictions to true values and compute errors
+Make sure the following dependencies and environments are met:
 
-For TL:
-Change hyper paramters of model A -> process target data -> re-train model on target data -> Make and plot flow predictions -> Compare predictions to true values and compute errors 
+| Package       | Version   |
+|---------------|-----------|
+| TensorFlow    | 2.7.0     |
+| NumPy         | 1.24.4    |
+| SciPy         | 1.10.1    |
+| Matplotlib    | 3.2.2     |
+| CUDA Toolkit  | 11.2      |
+| cuDNN         | 8.1       |
 
-Strouhal number converges on 0.2 for Re<2e5 (I think)
-for Re=100, St=0.16  ==> T=6.25
-for Re=150, St=0.173  ==> T=5.78
-for Re=100000, St=0.19996 ==> T=5
-Therefore we converge on a period of 5s, we need a snapshot every 5/3 Seconds.
+> ⚠️ Ensure that your GPU environment supports CUDA 11.2 and cuDNN 8.1 for optimal training performance.
 
-Change save it -> change print it -> change save type for Tl -> change config stuff -> change slurm file
+---
 
-The checkpointed models for the TL saved as the same name as the loaded pre trained model
+## 🔁 Workflow
 
-when TL try reducing the impact lambda 1 has on the loss, this ensures once l1 is found as = 1 it wont change as much.
+### 🔹 Training a Baseline PINN
 
+1. **Preprocess Source Data** for training case A  
+2. **Train PINN Model A** on source data  
+3. **Preprocess Test Data** for case A  
+4. **Predict and Plot Flow Fields** (e.g., \( u, v, p \))  
+5. **Compute Errors**: MSE, relative L2 error, PDE residuals  
+6. **Visualize** prediction quality through plots and animations
 
+---
+
+### 🔹 Transfer Learning with PINNs
+
+1. **Load Pretrained Model A**  
+2. **Modify Hyperparameters** (e.g., learning rate, λ-weighting)  
+3. **Preprocess Target Data** for new case (e.g., different Reynolds number)  
+4. **Retrain Model A** on the new data  
+5. **Generate Predictions** and compare to ground truth  
+6. **Evaluate and Visualize** performance (error metrics, FFTs, plots)
+
+---
+
+## 💻 Git Workflow for HPC + Local Dev
+
+### Local → GitHub → HPC
+
+1. Make changes locally (VS Code or similar)  
+2. Push to GitHub  
+3. SSH into HPC and run:
+   ```bash
+   git reset --hard
+   git clean -fd
+   git pull origin main
+
+data/
+│
+├──cyl100/
+├──cyl150/
+
+TL-PINNs/
+│
+├── frames/             # Snapshots of flow fields for report writing
+├── models/             # Saved model checkpoints (.npz files)
+├── out/                # HPC out files
+├── pinn/               # This has the pre and post processing, the model and the FFT code
+├── plots/              # Plots 
+├── temp/               # Temporary processed data storage, included in gitignore as files too large
+├── evaluate.py         # Script to compute errors and visualizations
+├── plotter.py          # Collocation points visualisation for report
+├── README.md           # This file
+├── Tl.py               # Transfer learning script
+├── training.py         # Base model training script
