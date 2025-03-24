@@ -33,17 +33,16 @@ Make sure the following dependencies and environments are met:
 
 1. **Preprocess Source Data** for training case A  
 2. **Train PINN Model A** on source data  
-3. **Preprocess Test Data** for case A  
-4. **Predict and Plot Flow Fields** (e.g., \( u, v, p \))  
-5. **Compute Errors**: MSE, relative L2 error, PDE residuals  
-6. **Visualize** prediction quality through plots and animations
+3. **Predict and Plot Flow Fields** (e.g., \( u, v, p \))  
+4. **Compute Errors**: MSE, relative L2 error, PDE residuals  
+5. **Visualize** prediction quality through plots and animations
 
 ---
 
 ### 🔹 Transfer Learning with PINNs
 
 1. **Load Pretrained Model A**  
-2. **Modify Hyperparameters** (e.g., learning rate, λ-weighting)  
+2. **Modify Hyperparameters** (e.g., learning rate, λ-weighting, data resolution)  
 3. **Preprocess Target Data** for new case (e.g., different Reynolds number)  
 4. **Retrain Model A** on the new data  
 5. **Generate Predictions** and compare to ground truth  
