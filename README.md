@@ -67,8 +67,8 @@ data/
 ├──cyl100/  
 ├──cyl150/  
 
-TL-PINNs/
-│
+TL-PINNs/  
+│  
 ├── frames/             # Snapshots of flow fields for report writing  
 ├── models/             # Saved model checkpoints (.npz files)  
 ├── out/                # HPC out files  
