@@ -62,10 +62,10 @@ Make sure the following dependencies and environments are met:
    git clean -fd
    git pull origin main
 
-data/
-│
-├──cyl100/
-├──cyl150/
+data/  
+│  
+├──cyl100/  
+├──cyl150/  
 
 TL-PINNs/
 │
