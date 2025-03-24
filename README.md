@@ -70,14 +70,14 @@ data/
 
 TL-PINNs/
 │
-├── frames/             # Snapshots of flow fields for report writing
-├── models/             # Saved model checkpoints (.npz files)
-├── out/                # HPC out files
-├── pinn/               # This has the pre and post processing, the model and the FFT code
-├── plots/              # Plots 
-├── temp/               # Temporary processed data storage, included in gitignore as files too large
-├── evaluate.py         # Script to compute errors and visualizations
-├── plotter.py          # Collocation points visualisation for report
-├── README.md           # This file
-├── Tl.py               # Transfer learning script
-├── training.py         # Base model training script
+├── frames/             # Snapshots of flow fields for report writing  
+├── models/             # Saved model checkpoints (.npz files)  
+├── out/                # HPC out files  
+├── pinn/               # This has the pre and post processing, the model and the FFT code  
+├── plots/              # Plots   
+├── temp/               # Temporary processed data storage, included in gitignore as files too large  
+├── evaluate.py         # Script to compute errors and visualizations  
+├── plotter.py          # Collocation points visualisation for report  
+├── README.md           # This file  
+├── Tl.py               # Transfer learning script  
+├── training.py         # Base model training script  
