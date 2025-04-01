@@ -81,11 +81,15 @@ def FFT(save_dir, model_path, Re_TL, x=1, y=0):
     plt.savefig(f"{save_dir}/FFT", dpi=300)
     plt.close()
 
+    train_indices = np.linspace(0, len(unique_times) - 1, 10, dtype=int)
+    train_points = unique_times[train_indices]
+    v_train_points = v_interp[train_indices]
 
     # Plot the time-domain signal
     plt.figure(figsize=(8, 6))
-    plt.plot(unique_times, v_interp, label="Interpolated Velocity at (x=1, y=0)", color='b')
-    plt.plot(t_values, v_pred_user, label="NN Prediction", color='r', linestyle='solid')
+    plt.plot(unique_times, v_interp, label="True Velocity at (x=1, y=0)", color='b')
+    plt.plot(t_values, v_pred_user, label="PINN Prediction", color='r', linestyle='solid')
+    plt.scatter(train_points, v_train_points, marker='o', color='b', label='Training Data')
     plt.xlabel("Time (s)")
     plt.ylabel("Amplitude")
     plt.title("Time-Domain Signal of Predicted v at (x=1, y=0)")

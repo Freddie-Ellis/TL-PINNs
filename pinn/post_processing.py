@@ -104,25 +104,40 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     # Plotting
     levels = 15
 
-    def plot_field(field, title, label, filename, cmap="bwr"):
-        plt.figure(figsize=(10, 6))
-        plt.contourf(X_grid, Y_grid, field, levels=levels, cmap=cmap)
-        plt.colorbar(label=label)
-        plt.xlabel("X Coordinate")
-        plt.ylabel("Y Coordinate")
-        plt.title(title)
-        plt.savefig(f"{save_dir}/{filename}", dpi=300)
-        plt.close()
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-    '''plot_field(u_grid, "True u Field", "True Velocity u", "true_u_field.png")
-    plot_field(v_grid, "True v Field", "True Velocity v", "true_v_field.png")
+    def plot_field(field, title, label, filename, cmap="bwr"):
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Main contour plot
+        contourf_plot = ax.contourf(X_grid, Y_grid, field, levels=10, cmap=cmap)
+        contour_lines = ax.contour(X_grid, Y_grid, field, levels=10, colors='k', linewidths=0.5)
+
+        # Create a divider for the existing axes instance
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1)  # 5% width, 0.1 padding
+
+        # Place colorbar in cax
+        cbar = fig.colorbar(contourf_plot, cax=cax, label=label)
+
+        # Axis styling
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_aspect("equal")
+
+        plt.tight_layout()
+        plt.savefig(f"{save_dir}/{filename}", dpi=300, bbox_inches='tight')
+        plt.close(fig)
+
+    plot_field(u_grid, "True u Field at Time t = 0.00", "True Velocity u", "true_u_field.png")
+    plot_field(v_grid, "True v Field at Time t = 0.00", "True Velocity v", "true_v_field.png")
     plot_field(griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
                         u_pred.flatten(), (X_grid, Y_grid), method='cubic'), 
                "Predicted u Field", "Predicted Velocity u", "predicted_u_field.png")
     plot_field(griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
                         v_pred.flatten(), (X_grid, Y_grid), method='cubic'), 
                "Predicted v Field", "Predicted Velocity v", "predicted_v_field.png")
-'''
+
     # Absolute errors
     error_u = np.abs(u_test_filtered - u_pred) 
     error_v = np.abs(v_test_filtered - v_pred) 
@@ -137,42 +152,48 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     # Animation for vorticity predictions
     def animate_vorticity_predictions(t_values):
         fig, ax = plt.subplots(figsize=(10, 6))
-        levels = 50
+
+        # Precompute vorticity for all time steps to get global min/max
+        all_vorticities = []
+
+        for t in t_values:
+            t_input = np.full_like(x_test_filtered, t)
+            u_pred, v_pred, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+
+            u_pred_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), u_pred.flatten(), (X_grid, Y_grid), method='cubic')
+            v_pred_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), v_pred.flatten(), (X_grid, Y_grid), method='cubic')
+
+            u_y, u_x = np.gradient(u_pred_grid, grid_y, grid_x)
+            v_y, v_x = np.gradient(v_pred_grid, grid_y, grid_x)
+            vorticity = v_x - u_y
+
+            vorticity = np.nan_to_num(vorticity, nan=0.0, posinf=0.0, neginf=0.0)
+            all_vorticities.append(vorticity)
+
+        # Convert list to 3D array and get global min/max
+        levels = np.linspace(-3, 3, 11)
+
+        contourf_plot = ax.contourf(X_grid, Y_grid, vorticity, levels=levels, cmap="rainbow")
+        contour_lines = ax.contour(X_grid, Y_grid, vorticity, levels=levels, colors='k', linewidths=0.5)
+        cbar = fig.colorbar(contourf_plot, ax=ax, label="Vorticity (ω)")
 
         def update(frame):
             t_input = np.full_like(x_test_filtered, t_values[frame])
             u_pred, v_pred, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
-            
-            # Interpolate u_pred and v_pred to the grid
-            u_pred_grid = griddata(
-                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
-                u_pred.flatten(), 
-                (X_grid, Y_grid), 
-                method='cubic'
-            )
-            v_pred_grid = griddata(
-                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
-                v_pred.flatten(), 
-                (X_grid, Y_grid), 
-                method='cubic'
-            )
-            
-            # Calculate gradients for vorticity
+            u_pred_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), u_pred.flatten(), (X_grid, Y_grid), method='cubic')
+            v_pred_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), v_pred.flatten(), (X_grid, Y_grid), method='cubic')
             u_y, u_x = np.gradient(u_pred_grid, grid_y, grid_x)
             v_y, v_x = np.gradient(v_pred_grid, grid_y, grid_x)
-
-            # Compute vorticity: ω = ∂v/∂x - ∂u/∂y
             vorticity = v_x - u_y
 
-            # Clear the axes and plot the vorticity field
-            ax.clear()
-            contour = ax.contourf(X_grid, Y_grid, vorticity, levels=levels, cmap="coolwarm")
+            ax.collections.clear()
+            ax.contourf(X_grid, Y_grid, vorticity, levels=levels, cmap="rainbow")
+            ax.contour(X_grid, Y_grid, vorticity, levels=levels, colors='k', linewidths=0.5)
             ax.set_title(f"Predicted Vorticity Field at Time t = {t_values[frame]:.2f}")
-            return contour
+            return ax.collections
 
-        # Create the animation
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
-        anim.save(f"{save_dir}/vorticity_animation.gif", writer="pillow", fps=5)
+        anim.save(f"{save_dir}/vorticity_animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
 
     #animate_vorticity_predictions(np.linspace(0, 20, 100)) #Comment this out to avoid long compilations if animation is already made
@@ -217,7 +238,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
 
-    animate_u_predictions(np.linspace(0, 20, 100))
+    #animate_u_predictions(np.linspace(0, 20, 100))
 
     # Animation for pressure predictions
     def animate_p_predictions(t_values):
@@ -260,28 +281,38 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/pressure_animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
 
-    # Example usage:
-    animate_p_predictions(np.linspace(0, 20, 100))
+    #animate_p_predictions(np.linspace(0, 20, 100))
 
 
     def animate_v_predictions(t_values):
         fig, ax = plt.subplots(figsize=(10, 6))
-        levels = 50
+
+        # Initial frame to define color limits
+        t_input = np.full_like(x_test_filtered, t_values[0])
+        _, v_pred, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
+        v_pred_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), v_pred.flatten(), (X_grid, Y_grid), method='cubic')
+        vmin, vmax = np.min(v_pred), np.max(v_pred)
+        levels = np.linspace(vmin, vmax, 11)
+
+        contourf_plot = ax.contourf(X_grid, Y_grid, v_pred_grid, levels=levels, cmap="bwr")
+        contour_lines = ax.contour(X_grid, Y_grid, v_pred_grid, levels=levels, colors='k', linewidths=0.5)
+        cbar = fig.colorbar(contourf_plot, ax=ax, label="Velocity (v)")
 
         def update(frame):
             t_input = np.full_like(x_test_filtered, t_values[frame])
             _, v_pred, _, _, _ = model.predict(x_test_filtered, y_test_filtered, t_input)
-            v_pred_grid = griddata(
-                (x_test_filtered.flatten(), y_test_filtered.flatten()), 
-                v_pred.flatten(), (X_grid, Y_grid), method='cubic'
-            )
-            ax.clear()
-            contour = ax.contourf(X_grid, Y_grid, v_pred_grid, levels=levels, cmap="siesmic")
-            ax.set_title(f"Predicted u Field at Time t = {t_values[frame]:.2f}")
-            return contour
+            v_pred_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), v_pred.flatten(), (X_grid, Y_grid), method='cubic')
+
+            ax.collections.clear()
+            ax.contourf(X_grid, Y_grid, v_pred_grid, levels=levels, cmap="bwr")
+            ax.contour(X_grid, Y_grid, v_pred_grid, levels=levels, colors='k', linewidths=0.5)
+            ax.set_title(f"Predicted v Field at Time t = {t_values[frame]:.2f}")
+            if frame < 5:
+                plt.savefig(f'frames/result/v_frame{frame}.png', dpi=200, bbox_inches='tight')
+            return ax.collections
 
         anim = FuncAnimation(fig, update, frames=len(t_values), interval=200)
-        anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5)
+        anim.save(f"{save_dir}/v_animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
         
     #animate_v_predictions(np.linspace(0, 20, 100))
