@@ -1,0 +1,2 @@
+Model Path,MSE_u,MSE_v,Relative Error_u (%),Relative Error_v (%),Residual_u (%),Residual_v (%),Lambda1,Lambda2,Error Lambda1,Error Lambda2
+models/Re100wcplong/Re100wcplong_10000.npz,6.344361e-02,1.066040e-01,28.08%,117.48%,6.922369e-01,4.262353e-01,0.984046,0.007512,1.60%,24.88%
