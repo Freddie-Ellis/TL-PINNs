@@ -21,7 +21,7 @@ def relative_l2_error(true, pred):
     return np.linalg.norm(true - pred) / np.linalg.norm(true)
 
 def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-2, y_end=2):
-    #run_ID = f'{run_ID}_TLwcp{Re_TL}_{layers_to_freeze}'
+    #run_ID = f'{run_ID}_TLnyq{Re}_[1, 2]'
     model.load_model(model_path)
 
     # Ensure the save directory exists
@@ -91,8 +91,8 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
     }
 
     # Define the metrics file path
-    metrics_file = f'plots/{run_ID}/metrics.csv'
-
+    metrics_file = f'plots/Re100wcp_TLnyq150_[1, 2]/metrics.csv'
+    os.makedirs(os.path.dirname(metrics_file), exist_ok=True)
     # Convert dictionary to DataFrame
     df_metrics = pd.DataFrame([metrics])
 
@@ -238,7 +238,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
 
-    #animate_u_predictions(np.linspace(0, 20, 100))
+    animate_u_predictions(np.linspace(0, 20, 100))
 
     # Animation for pressure predictions
     def animate_p_predictions(t_values):
@@ -281,7 +281,7 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/pressure_animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
 
-    #animate_p_predictions(np.linspace(0, 20, 100))
+    animate_p_predictions(np.linspace(0, 20, 100))
 
 
     def animate_v_predictions(t_values):
@@ -315,4 +315,4 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         anim.save(f"{save_dir}/v_animation.gif", writer="pillow", fps=5, dpi=200)
         plt.close(fig)
         
-    #animate_v_predictions(np.linspace(0, 20, 100))
+    animate_v_predictions(np.linspace(0, 20, 100))

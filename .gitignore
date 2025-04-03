@@ -6,3 +6,5 @@ temp/data_re150_35x15x250.npz
 temp/data_re150_25x10x5.npz
 temp/data_re100_35x15x250.npz
 temp/data_re100_35x15x5.npz
+temp/data_re100_25x10x5.npz
+temp/data_re150_25x10x250.npz
