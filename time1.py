@@ -40,3 +40,40 @@ def extract_cumulative_checkpoint_timings(log_file_path):
 if __name__ == "__main__":
     log_file = "out/Re100wcp.out"  # Change to your actual output log file
     extract_cumulative_checkpoint_timings(log_file)
+
+
+import re
+
+# Load the SLURM output log
+with open("out/Re100wcp_TL150nyq.out", "r") as f:
+    lines = f.readlines()
+
+model_times = {}
+current_model = None
+total_time = 0
+capture = False
+
+for line in lines:
+    # Detect model start
+    model_match = re.search(r"Processing model:\s+(.+\.npz)", line)
+    if model_match:
+        if current_model and total_time > 0:
+            model_times[current_model] = round(total_time, 2)
+        current_model = model_match.group(1).split("/")[-1]
+        total_time = 0
+        capture = True
+
+    # Capture iteration line with time
+    if capture:
+        iter_match = re.search(r"It:\s+\d+,\s+Loss: .*?,\s+l1: .*?,\s+l2: .*?,\s+Time: ([\d.]+)", line)
+        if iter_match:
+            total_time += float(iter_match.group(1))
+
+    # Detect model training complete
+    if "Model Training Complete" in line and current_model:
+        model_times[current_model] = round(total_time, 2)
+        capture = False
+
+# Print the results
+for model, time_taken in model_times.items():
+    print(f"{model}: {time_taken} seconds")
