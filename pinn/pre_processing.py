@@ -8,9 +8,9 @@ from scipy.interpolate import griddata
 from tqdm import tqdm
 import os
 
-def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=5,
+def process_reynolds_data(Re, time_start=0, time_end=250, num_time_points=10,
                           x_start=1, x_end=8, y_start=-2, y_end=2,
-                          num_points_x=25, num_points_y=10, cylinder_radius=0.5,
+                          num_points_x=35, num_points_y=15, cylinder_radius=0.5,
                           save_path='temp/'):
 
     # Ensure the save directory exists
