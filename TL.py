@@ -9,7 +9,7 @@ from pinn.model_wcp import PhysicsInformedNN_wcp
 model_dir = f'models/{run_ID}/'
 model_files = sorted([f for f in os.listdir(model_dir) if f.endswith(".npz")])
 
-run_ID = f"{run_ID}_TLnyq2"
+run_ID = f"{run_ID}_TLnyq"
 Re_TL = 150
 layers_to_freeze = [1,2]
 
