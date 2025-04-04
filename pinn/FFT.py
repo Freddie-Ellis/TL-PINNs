@@ -81,7 +81,7 @@ def FFT(save_dir, model_path, Re_TL, x=1, y=0):
     plt.savefig(f"{save_dir}/FFT", dpi=300)
     plt.close()
 
-    train_indices = np.linspace(0, len(unique_times) - 1, 10, dtype=int)
+    train_indices = np.linspace(0, len(unique_times) - 1, 4, dtype=int)
     train_points = unique_times[train_indices]
     v_train_points = v_interp[train_indices]
 
