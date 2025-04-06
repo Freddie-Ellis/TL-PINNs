@@ -38,14 +38,14 @@ def extract_cumulative_checkpoint_timings(log_file_path):
 
 # Run
 if __name__ == "__main__":
-    log_file = "out/Re100wcp.out"  # Change to your actual output log file
+    log_file = "out/Re100wcp_TLwcp150.out"  # Change to your actual output log file
     extract_cumulative_checkpoint_timings(log_file)
 
 
 import re
 
 # Load the SLURM output log
-with open("out/Re100wcp_TL150nyq.out", "r") as f:
+with open("out/Re100wcp_TLwcp150.out", "r") as f:
     lines = f.readlines()
 
 model_times = {}
@@ -76,4 +76,4 @@ for line in lines:
 
 # Print the results
 for model, time_taken in model_times.items():
-    print(f"{model}: {time_taken} seconds")
+    print(f"{model}: {time_taken / 60} seconds")
