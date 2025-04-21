@@ -5,7 +5,7 @@ from pinn.FFT import FFT
 from TL import layers_to_freeze, Re_TL
 
 # Define the path to the directory containing the models
-#run_ID = f'{run_ID}_TLnyq4snap{Re_TL}_{layers_to_freeze}' # Use this for the TL models not standard models
+run_ID = f'{run_ID}_TLnyq{Re_TL}_{layers_to_freeze}' # Use this for the TL models not standard models
 model_dir = f'models/{run_ID}/'
 
 # List all model files in the directory
@@ -25,12 +25,12 @@ for model_file in model_files:
     model_file_no_ext, _ = os.path.splitext(model_file)
 
 # Pass the modified filename for saving plots
-    results = evaluate_model(
+    '''results = evaluate_model(
         Re_TL, 
         0, 
         f'models/{run_ID}/{model_file}', 
         f'plots/{run_ID}/{model_file_no_ext}/'
-    )
+    )'''
     
     run_FFT = FFT(
         f'plots/{run_ID}/{model_file_no_ext}/',
