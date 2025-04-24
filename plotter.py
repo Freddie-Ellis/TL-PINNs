@@ -67,8 +67,8 @@ p_data = scipy.io.loadmat(f'{data_path}pstar')['pstar']
 # Prepare test data
 x_test = coord_data[:, 0:1]
 y_test = coord_data[:, 1:2]
-u_test = vel_data[:, 0, 156]
-v_test = vel_data[:, 1, 156]
+u_test = vel_data[:, 0, 0]
+v_test = vel_data[:, 1, 0]
 
 # Create regular grid
 x = x_test.flatten()
@@ -98,8 +98,6 @@ ax.set_xlabel("x")
 ax.set_ylabel("y")
 ax.set_title("Streamwise Velocity (u) at t = 0")
 ax.set_aspect("equal")
-ax.set_xlim(1,8)
-ax.set_ylim(-2,2)
 plt.tight_layout()
 plt.savefig('report_plots/u_example0', dpi=300)
 plt.show()

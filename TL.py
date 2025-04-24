@@ -22,7 +22,7 @@ os.makedirs(plots_dir, exist_ok=True)
 
 # Load or process data
 data = process_reynolds_data(Re_TL)
-visualize_velocity_contours(data, save_path=f'{plots_dir}/{run_ID}{Re_TL}_training_data.gif')
+#visualize_velocity_contours(data, save_path=f'{plots_dir}/{run_ID}{Re_TL}_training_data.gif')
 
 # Extract processed training data
 x_train = data['x_train']
