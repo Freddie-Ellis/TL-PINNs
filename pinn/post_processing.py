@@ -316,3 +316,103 @@ def evaluate_model(Re, snap, model_path, save_dir, x_start=1, x_end=8, y_start=-
         plt.close(fig)
         
    #animate_v_predictions(np.linspace(0, 20, 100))
+
+def evaluate_time_averaged_error(Re, model_path, save_dir, x_start=1, x_end=8, y_start=-2, y_end=2, time_steps=21):
+    model.load_model(model_path)
+
+    # Ensure the save directory exists
+    os.makedirs(save_dir, exist_ok=True)
+
+    # Load data
+    data_path = f'../data/Cyl{Re}/'
+    vel_data = scipy.io.loadmat(f'{data_path}ustar')['ustar']  # N x 2 x T
+    coord_data = scipy.io.loadmat(f'{data_path}xstar')['xstar']  # N x 2
+    t_data = scipy.io.loadmat(f'{data_path}tstar')['tstar']    # T x 1
+
+    # Prepare test data
+    x_test = coord_data[:, 0:1]
+    y_test = coord_data[:, 1:2]
+    u_test = vel_data[:, 0, :]  # Full time series for u
+    v_test = vel_data[:, 1, :]  # Full time series for v
+
+    # Apply spatial filtering
+    mask = ((x_test >= x_start) & (x_test <= x_end)) & ((y_test >= y_start) & (y_test <= y_end))
+    x_test_filtered = x_test[mask].reshape(-1, 1)
+    y_test_filtered = y_test[mask].reshape(-1, 1)
+    u_test_filtered = u_test[mask.flatten(), :]
+    v_test_filtered = v_test[mask.flatten(), :]
+
+    # Create grid for plotting
+    grid_x = np.linspace(x_start, x_end, 500)
+    grid_y = np.linspace(y_start, y_end, 500)
+    X_grid, Y_grid = np.meshgrid(grid_x, grid_y)
+
+    # Initialize arrays to accumulate errors over time
+    total_error_u = np.zeros_like(X_grid)
+    total_error_v = np.zeros_like(X_grid)
+    total_points = np.zeros_like(X_grid)
+
+    # Make predictions every second for 20 seconds (time_steps = 20)
+    for t in range(time_steps):
+        t_pred = np.full((x_test_filtered.shape[0], 1), t)  # Time steps in seconds
+
+        # Get predictions from the model
+        u_pred, v_pred, p_pred, f_u_pred, f_v_pred = model.predict(x_test_filtered, y_test_filtered, t_pred)
+
+        # Interpolate predictions onto the grid
+        u_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                          u_pred.flatten(), (X_grid, Y_grid), method='cubic')
+        v_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                          v_pred.flatten(), (X_grid, Y_grid), method='cubic')
+
+        # Interpolate true values onto the grid
+        u_true_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                               u_test_filtered[:, int(t / 0.08)], (X_grid, Y_grid), method='cubic')  # Access time step t correctly
+        v_true_grid = griddata((x_test_filtered.flatten(), y_test_filtered.flatten()), 
+                               v_test_filtered[:, int(t / 0.08)], (X_grid, Y_grid), method='cubic')  # Access time step t correctly
+
+        # Calculate errors at this time step
+        error_u = np.abs(u_true_grid - u_grid)
+        error_v = np.abs(v_true_grid - v_grid)
+
+        '''# Calculate relative errors as a percentage for u and v
+        rel_error_u = np.abs(u_true_grid - u_grid) / np.abs(u_true_grid) * 100
+        rel_error_v = np.abs(v_true_grid - v_grid) / np.abs(v_true_grid) * 100'''
+
+        # Accumulate errors
+        total_error_u += error_u
+        total_error_v += error_v
+        total_points += np.ones_like(error_u)
+
+    # Compute average errors over the entire time domain
+    avg_error_u = total_error_u / total_points
+    avg_error_v = total_error_v / total_points
+
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+    def plot_field(field, title, label, filename, cmap="bwr"):
+        fig, ax = plt.subplots(figsize=(10, 6))
+
+        # Main contour plot
+        contourf_plot = ax.contourf(X_grid, Y_grid, field, levels=10, cmap=cmap)
+        contour_lines = ax.contour(X_grid, Y_grid, field, levels=10, colors='k', linewidths=0.5)
+
+        # Create a divider for the existing axes instance
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="5%", pad=0.1)  # 5% width, 0.1 padding
+
+        # Place colorbar in cax
+        cbar = fig.colorbar(contourf_plot, cax=cax, label=label)
+
+        # Axis styling
+        ax.set_xlabel("X")
+        ax.set_ylabel("Y")
+        ax.set_aspect("equal")
+
+        plt.tight_layout()
+        plt.savefig(f"{save_dir}/{filename}", dpi=300, bbox_inches='tight')
+        plt.close(fig)
+
+    # Plot time-averaged error fields
+    plot_field(avg_error_u, "Time-Averaged Error in u Field", "Error in u", "avg_error_u_field.png", cmap="coolwarm")
+    plot_field(avg_error_v, "Time-Averaged Error in v Field", "Error in v", "avg_error_v_field.png", cmap="coolwarm")
