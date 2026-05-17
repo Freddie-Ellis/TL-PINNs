@@ -4,13 +4,13 @@ A third-year individual research project exploring the integration of **Transfer
 
 ---
 
-## 🧠 Project Overview
+## Project Overview
 
 This project investigates how pre-trained PINNs can be efficiently adapted to new flow regimes using transfer learning techniques. The models are trained to solve PDEs governing fluid flow (e.g., Navier-Stokes) using limited data, and retrained for new Reynolds numbers or boundary conditions.
 
 ---
 
-## 📦 Requirements
+## Requirements
 
 Make sure the following dependencies and environments are met:
 
@@ -23,13 +23,13 @@ Make sure the following dependencies and environments are met:
 | CUDA Toolkit  | 11.2      |
 | cuDNN         | 8.1       |
 
-> ⚠️ Ensure that your GPU environment supports CUDA 11.2 and cuDNN 8.1 for optimal training performance.
+> Ensure that your GPU environment supports CUDA 11.2 and cuDNN 8.1 for optimal training performance.
 
 ---
 
-## 🔁 Workflow
+## Workflow
 
-### 🔹 Training a Baseline PINN
+### Training a Baseline PINN
 
 1. **Preprocess Source Data** for training case A  
 2. **Train PINN Model A** on source data  
@@ -39,7 +39,7 @@ Make sure the following dependencies and environments are met:
 
 ---
 
-### 🔹 Transfer Learning with PINNs
+### Transfer Learning with PINNs
 
 1. **Load Pretrained Model A**  
 2. **Modify Hyperparameters** (e.g., learning rate, λ-weighting, data resolution)  
@@ -50,7 +50,7 @@ Make sure the following dependencies and environments are met:
 
 ---
 
-## 💻 Git Workflow for HPC + Local Dev
+## Git Workflow for HPC + Local Dev
 
 ### Local → GitHub → HPC
 
