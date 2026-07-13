@@ -50,18 +50,6 @@ Make sure the following dependencies and environments are met:
 
 ---
 
-## Git Workflow for HPC + Local Dev
-
-### Local → GitHub → HPC
-
-1. Make changes locally (VS Code or similar)  
-2. Push to GitHub  
-3. SSH into HPC and run:
-   ```bash
-   git reset --hard
-   git clean -fd
-   git pull origin main
-
 data/  
 │  
 ├──cyl100/  
